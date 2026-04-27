@@ -128,8 +128,22 @@ void *monitor_check(void *d){
             i++;
         }
 
- 
+        // if (stop_f == number_coder)
+        // {
+        //    set_stop(data);
+        //    return NULL;
+        // }
      }
      printf("success");
     return NULL;
+}
+
+
+int check_coders(t_coder *coder){
+    
+    if (coder->compile_count > coder->data->args.number_of_compiles_required)
+    {
+       return 0;
+    }
+    return 1;
 }

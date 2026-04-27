@@ -124,10 +124,17 @@ void *monitor_check(void *d){
             }
             if (data->coders[i].compile_count >= data->args.number_of_compiles_required)
                 stop_f++;
+
+           
             usleep(10);
             i++;
         }
 
+        if (check_coders(data))
+            {
+                set_stop(data);
+                return NULL;
+            }
         // if (stop_f == number_coder)
         // {
         //    set_stop(data);
@@ -139,11 +146,17 @@ void *monitor_check(void *d){
 }
 
 
-int check_coders(t_coder *coder){
-    
-    if (coder->compile_count > coder->data->args.number_of_compiles_required)
+int check_coders(t_data *data){
+    int i;
+
+    i = 0;
+    while (i < data->args.number_of_coders)
     {
-       return 0;
+        if (data->coders[i].compile_count < data->args.number_of_compiles_required)
+        {
+            return 0;
+        }
+        i++;
     }
     return 1;
 }

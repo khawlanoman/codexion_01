@@ -102,6 +102,9 @@ long long time_current(void);
 
 void *monitor_check(void *data);
 
+
+int check_coders(t_data *data);
+
 int lock_dongles(t_coder *coder);
 
 

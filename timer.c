@@ -128,11 +128,7 @@ void *monitor_check(void *d){
             i++;
         }
 
-        /*if (stop_f == number_coder)
-        {
-           set_stop(data);
-           return NULL;
-        }*/
+ 
      }
      printf("success");
     return NULL;

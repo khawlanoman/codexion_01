@@ -66,6 +66,7 @@ typedef struct s_data
     int stop;
     pthread_mutex_t print_lock;
     pthread_mutex_t m_stop;
+    pthread_mutex_t m_last_compile;
 
 }t_data;
 
@@ -88,10 +89,21 @@ void create_coders(t_args *arg, t_coder *arr_coder);
 t_coder *create_array_coders(t_data *data);
 
 t_dongle *create_array_dongles(t_data *data);
-void add_dongles_to_coders(t_data *data, t_coder *coder, t_dongle *dongles){
+
+void add_dongles_to_coders(t_data *data, t_coder *coder, t_dongle *dongles);
+
 void init_dongles(t_dongle *dongles, t_data *data);
+
+
+void set_stop(t_data *data);
+int get_stop(t_data *data);
 
 long long time_current(void);
 
 void *monitor_check(void *data);
+
+int lock_dongles(t_coder *coder);
+
+
+
 #endif

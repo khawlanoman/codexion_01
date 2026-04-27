@@ -23,7 +23,7 @@ int main(int argc, char **argv){
         return 1;
     }
     t_args arg;
-    //t_data data;
+    t_data data;
     char *err;
     char *valid;
    
@@ -55,5 +55,51 @@ int main(int argc, char **argv){
     }
 
    
+
+    data.args = arg;
+    data.coders = NULL;
+    data.dongles = NULL;
+    data.start_time = time_current();
+    data.stop = 0;
+    
+    pthread_mutex_init(&data.print_lock, NULL);
+    data.stop = 0;
+   /* int i = 1;
+    while (i < argc)
+    {
+        printf("%s \t",argv[i]);
+        i++;
+    }
+    */ 
+    data.coders = create_array_coders(&data);
+    data.coders->last_compile_time = data.start_time;
+    data.dongles = create_array_dongles(&data);
+    if (!data.coders || !data.dongles){
+        return 1;
+    }
+
+    init_dongles(data.dongles,&data);
+    add_dongles_to_coders(&data,data.coders,data.dongles);
+    create_coders(&data.args, data.coders);
+    
+    //printf("\n%d\n",arg.number_of_coders);
+    /*int i = 0 ;
+    while (i< arg.number_of_coders){
+        printf("%d left: %p right: %p\n",data.coders[i].id, (void *)data.coders[i].left_dongle, (void *)data.coders[i].right_dongle);
+        i++;
+    }*/
+    pthread_t m_check;
+    
+    pthread_create(&m_check,NULL,monitor_check, &data);
+    int i = 0;
+    while (i < arg.number_of_coders)
+    {
+           pthread_join(data.coders[i].thread, NULL);
+           i++;
+
+    }
+
+    pthread_join(m_check,NULL);
+
     return 0;
 }

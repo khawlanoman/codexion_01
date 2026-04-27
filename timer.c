@@ -21,6 +21,13 @@ int get_stop(t_data *data){
     return value;
 }
 
+void set_stop(t_data *data){
+    
+    pthread_mutex_lock(&data->m_stop);
+    data->stop = 1;
+    pthread_mutex_unlock(&data->m_stop);
+
+}
 
 long long time_current(void){
     long long time_now;
@@ -31,3 +38,102 @@ long long time_current(void){
     return time_now;
 }
 
+
+/*
+void *monitor_check(void *d){
+     int i;
+     long long now ;
+     long long timestamp;
+     int number_coder;
+     t_data *data;
+     data = (t_data *)d;
+     int stop_f;
+    
+     number_coder = data->args.number_of_coders;
+
+     while (!get_stop(data))
+     {
+        i = 0;
+       
+    
+        long long  x ;
+       
+        stop_f = 0;
+        now = time_current() - data->start_time;
+        while (i < number_coder)
+        {
+            pthread_mutex_lock(&data->m_last_compile);
+                x = data->coders[i].last_compile_time + data->args.time_to_burnout;
+            pthread_mutex_unlock(&data->m_last_compile);
+
+            if ( now >= x){
+                
+                pthread_mutex_lock(&data->print_lock);
+                timestamp = now - data->coders[i].data->start_time;
+                printf("%lld %d burned out\n",timestamp, data->coders[i].id);
+                pthread_mutex_unlock(&data->print_lock);
+                
+                set_stop(data);
+                return NULL;
+            }
+            if (data->coders[i].compile_count >= data->args.number_of_compiles_required)
+                stop_f++;
+            i++;
+        }
+        if (stop_f == number_coder)
+        {
+           set_stop(data);
+           return NULL;
+        }
+        usleep(2000);
+     }
+    return NULL;
+}*/
+
+void *monitor_check(void *d){
+     int i;
+     long long now ;
+    //  long long timestamp;
+     int number_coder;
+     t_data *data;
+     data = (t_data *)d;
+    int stop_f;
+    number_coder = data->args.number_of_coders;
+     
+     while (!get_stop(data))
+     {
+        i = 0;
+        stop_f = 0;
+        now = time_current() - data->start_time;
+        while (i < number_coder)
+        {
+           long long  x = data->coders[i].last_compile_time + data->args.time_to_burnout;
+        //    printf("{x = %lld, now = %lld}", x, now);
+            if (now >= x){
+
+                pthread_mutex_lock(&data->m_stop);
+                data->stop = 1;
+                pthread_mutex_unlock(&data->m_stop);
+                
+                pthread_mutex_lock(&data->print_lock);
+                // timestamp = now - data->coders[i].data->start_time;
+                printf("%lld %d burned out\n",now, data->coders[i].id);
+                pthread_mutex_unlock(&data->print_lock);
+                break;
+                return NULL;
+            }
+            if (data->coders[i].compile_count >= data->args.number_of_compiles_required)
+                stop_f++;
+            usleep(10);
+            i++;
+        }
+
+        /*if (stop_f == number_coder)
+        {
+           set_stop(data);
+           return NULL;
+        }*/
+     }
+     printf("success");
+    return NULL;
+}

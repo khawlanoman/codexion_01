@@ -39,6 +39,11 @@ void *thread_f(void *arg)
         
       
        
+        //  if (get_stop(coder->data))
+        //  {
+        //      return NULL;
+        //  }
+         
         time_now = time_current();
 
         pthread_mutex_lock(&coder->data->m_last_compile);
@@ -52,16 +57,17 @@ void *thread_f(void *arg)
 
         usleep(coder->data->args.time_to_compile * 1000);
 
-       
+       coder->compile_count++;
         pthread_mutex_unlock(&coder->left_dongle->mutex);
         pthread_mutex_unlock(&coder->right_dongle->mutex);
         
+        
         usleep(coder->data->args.dongle_cooldown * 1000);
 
-        if (get_stop(coder->data))
-        {
-            return NULL;
-        }
+        // if (get_stop(coder->data))
+        // {
+        //     return NULL;
+        // }
       
         time_now = time_current();
         timestamp = time_now - coder->data->start_time;
@@ -71,11 +77,10 @@ void *thread_f(void *arg)
 
         usleep(coder->data->args.time_to_debug * 1000);
 
-        if (get_stop(coder->data))
-        {
-            return NULL;
-        }
-
+        //  if (get_stop(coder->data))
+        //  {
+        //      return NULL;
+        //  }
         time_now = time_current();
         timestamp = time_now - coder->data->start_time;
         pthread_mutex_lock(&coder->data->print_lock);
@@ -85,14 +90,7 @@ void *thread_f(void *arg)
         usleep(coder->data->args.time_to_refactor * 1000);
 
         if (get_stop(coder->data))
-        {
             return NULL;
-        }
-        
-        coder->compile_count++;
-
-        if (coder->compile_count == coder->data->args.number_of_compiles_required)
-                return NULL;
     }
 
     return NULL;
@@ -116,7 +114,7 @@ t_coder *create_array_coders(t_data *data){
         arr_coders[i].state = 0;
         arr_coders[i].left_dongle = NULL;
         arr_coders[i].right_dongle = NULL;
-        arr_coders[i].compile_count = data->args.time_to_compile;
+        arr_coders[i].compile_count =0;
         arr_coders[i].data = data;
         i++;
     }

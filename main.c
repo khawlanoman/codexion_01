@@ -54,7 +54,6 @@ int main(int argc, char **argv){
        return 1;
     }
 
-   
 
     data.args = arg;
     data.coders = NULL;

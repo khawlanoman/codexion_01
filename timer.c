@@ -97,13 +97,13 @@ void *monitor_check(void *d){
      int number_coder;
      t_data *data;
      data = (t_data *)d;
-    int stop_f;
+   
     number_coder = data->args.number_of_coders;
      
      while (!get_stop(data))
      {
         i = 0;
-        stop_f = 0;
+       
         now = time_current() - data->start_time;
         while (i < number_coder)
         {
@@ -122,9 +122,7 @@ void *monitor_check(void *d){
                 break;
                 return NULL;
             }
-            if (data->coders[i].compile_count >= data->args.number_of_compiles_required)
-                stop_f++;
-
+           
            
             usleep(10);
             i++;

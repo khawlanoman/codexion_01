@@ -110,7 +110,7 @@ void *monitor_check(void *d){
            long long  x = data->coders[i].last_compile_time + data->args.time_to_burnout;
         //    printf("{x = %lld, now = %lld}", x, now);
             if (now >= x){
-
+                set_stop(data);
                 pthread_mutex_lock(&data->m_stop);
                 data->stop = 1;
                 pthread_mutex_unlock(&data->m_stop);
@@ -119,7 +119,6 @@ void *monitor_check(void *d){
                 // timestamp = now - data->coders[i].data->start_time;
                 printf("%lld %d burned out\n",now, data->coders[i].id);
                 pthread_mutex_unlock(&data->print_lock);
-                break;
                 return NULL;
             }
            
@@ -151,10 +150,21 @@ int check_coders(t_data *data){
     while (i < data->args.number_of_coders)
     {
         if (data->coders[i].compile_count < data->args.number_of_compiles_required)
-        {
             return 0;
-        }
         i++;
     }
     return 1;
+}
+
+
+
+void smart_sleep(long var,t_coder *coder){
+
+   
+    if (get_stop(coder->data))
+        {
+            return;
+        }
+     usleep(var * 1000);
+
 }

@@ -79,6 +79,7 @@ typedef struct s_data
     int compile_count;
     state_type state;
     t_data *data;
+    int finish ;
 } t_coder;
 
 
@@ -108,5 +109,6 @@ int check_coders(t_data *data);
 int lock_dongles(t_coder *coder);
 
 
+void smart_sleep(long var,t_coder *coder);
 
 #endif

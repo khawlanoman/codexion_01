@@ -18,7 +18,6 @@ void *thread_f(void *arg)
     long long timestamp;
 
     coder = (t_coder *)arg;
-
     while (!get_stop(coder->data) && !coder->finish)
     {
         if (coder->compile_count >= coder->data->args.number_of_compiles_required)

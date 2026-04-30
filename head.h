@@ -83,6 +83,14 @@ typedef struct s_data
 } t_coder;
 
 
+// typedef struct s_queue{
+//     int *arr;
+//     int next;
+
+//     int 
+// }
+
+
 char *check_args(t_args *arg);
 char *valid_args(char **argv, int argc);
 

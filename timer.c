@@ -39,56 +39,6 @@ long long time_current(void){
 }
 
 
-/*
-void *monitor_check(void *d){
-     int i;
-     long long now ;
-     long long timestamp;
-     int number_coder;
-     t_data *data;
-     data = (t_data *)d;
-     int stop_f;
-    
-     number_coder = data->args.number_of_coders;
-
-     while (!get_stop(data))
-     {
-        i = 0;
-       
-    
-        long long  x ;
-       
-        stop_f = 0;
-        now = time_current() - data->start_time;
-        while (i < number_coder)
-        {
-            pthread_mutex_lock(&data->m_last_compile);
-                x = data->coders[i].last_compile_time + data->args.time_to_burnout;
-            pthread_mutex_unlock(&data->m_last_compile);
-
-            if ( now >= x){
-                
-                pthread_mutex_lock(&data->print_lock);
-                timestamp = now - data->coders[i].data->start_time;
-                printf("%lld %d burned out\n",timestamp, data->coders[i].id);
-                pthread_mutex_unlock(&data->print_lock);
-                
-                set_stop(data);
-                return NULL;
-            }
-            if (data->coders[i].compile_count >= data->args.number_of_compiles_required)
-                stop_f++;
-            i++;
-        }
-        if (stop_f == number_coder)
-        {
-           set_stop(data);
-           return NULL;
-        }
-        usleep(2000);
-     }
-    return NULL;
-}*/
 
 void *monitor_check(void *d){
      int i;
@@ -129,7 +79,7 @@ void *monitor_check(void *d){
 
         if (check_coders(data))
             {
-                set_stop(data);
+                // set_stop(data);
                 return NULL;
             }
         // if (stop_f == number_coder)
@@ -160,11 +110,13 @@ int check_coders(t_data *data){
 
 void smart_sleep(long var,t_coder *coder){
 
-   
-    if (get_stop(coder->data))
-        {
-            return;
-        }
-     usleep(var * 1000);
+   long long time_now;
 
+   time_now = time_current();
+   while (!get_stop(coder->data))
+   {
+    if (time_current() - time_now >= var)
+            break;
+     usleep(500);
+   }
 }

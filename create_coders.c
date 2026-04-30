@@ -73,8 +73,8 @@ void *thread_f(void *arg)
         
         //usleep(coder->data->args.dongle_cooldown * 1000);
 
-        // if (get_stop(coder->data))
-        //     return NULL;
+        if (get_stop(coder->data))
+            return NULL;
         
         time_now = time_current();
         timestamp = time_now - coder->data->start_time;
@@ -86,8 +86,8 @@ void *thread_f(void *arg)
         smart_sleep(coder->data->args.time_to_debug,coder);
         
         
-        // if (get_stop(coder->data))
-        //     return NULL;
+        if (get_stop(coder->data))
+            return NULL;
         
         time_now = time_current();
         timestamp = time_now - coder->data->start_time;
@@ -127,7 +127,7 @@ t_coder *create_array_coders(t_data *data){
         arr_coders[i].left_dongle = NULL;
         arr_coders[i].right_dongle = NULL;
         arr_coders[i].compile_count =0;
-        arr_coders[i].last_compile_time = data->start_time;
+        arr_coders[i].last_compile_time = 0;
         arr_coders[i].data = data;
         i++;
     }

@@ -21,11 +21,22 @@ void *thread_f(void *arg)
     while (!get_stop(coder->data) && !coder->finish)
     {
         if (coder->compile_count >= coder->data->args.number_of_compiles_required)
-           {     
+        {     
                 coder->finish = 1;
                 return NULL;
-           }
-      
+        }
+
+        if (coder->data->args.scheduler == fifo)
+        {
+            add_to_queue(coder->data, coder->id);
+
+            while (!get_stop(coder->data) &&
+                first_queue_id(coder->data->dongles->queue) != coder->id)
+            {
+                usleep(500);
+            }
+        }
+
         if (lock_dongles(coder)== 0)
         {
            
@@ -43,10 +54,10 @@ void *thread_f(void *arg)
         
       
        
-        //  if (get_stop(coder->data))
-        //  {
-        //      return NULL;
-        //  }
+         if (get_stop(coder->data))
+         {
+             return NULL;
+         }
          
         time_now = time_current();
 
@@ -61,16 +72,17 @@ void *thread_f(void *arg)
          coder->compile_count++;
         //usleep(coder->data->args.time_to_compile * 1000);
         smart_sleep(coder->data->args.time_to_compile,coder);
-
-       pthread_mutex_unlock(&coder->right_dongle->mutex); 
-       pthread_mutex_unlock(&coder->left_dongle->mutex);
-
-
-       smart_sleep(coder->data->args.dongle_cooldown,coder);
-
         
-        
-        //usleep(coder->data->args.dongle_cooldown * 1000);
+        pthread_mutex_unlock(&coder->right_dongle->mutex); 
+        pthread_mutex_unlock(&coder->left_dongle->mutex);
+
+       
+        smart_sleep(coder->data->args.dongle_cooldown,coder);
+
+        // if (coder->data->args.scheduler == fifo){
+        //     remove_first_queue_id(coder->data->dongles->queue);
+        // }
+
 
         if (get_stop(coder->data))
             return NULL;
@@ -126,7 +138,7 @@ t_coder *create_array_coders(t_data *data){
         arr_coders[i].left_dongle = NULL;
         arr_coders[i].right_dongle = NULL;
         arr_coders[i].compile_count = 0;
-        arr_coders[i].last_compile_time = 0;
+        arr_coders[i].last_compile_time = data->start_time;
         arr_coders[i].data = data;
         i++;
     }
@@ -155,9 +167,9 @@ void create_coders(t_args *arg, t_coder *arr_coder){
 }
 
 
-
 int lock_dongles(t_coder *coder)
 {
+
     if (coder->id % 2 == 0)
     {
         while (!get_stop(coder->data))

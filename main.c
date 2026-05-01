@@ -70,6 +70,10 @@ int main(int argc, char **argv){
         i++;
     }
     */ 
+   
+   
+
+
     data.coders = create_array_coders(&data);
     data.coders->last_compile_time = data.start_time;
     data.dongles = create_array_dongles(&data);
@@ -77,9 +81,21 @@ int main(int argc, char **argv){
         return 1;
     }
 
+
+   
+
+
     init_dongles(data.dongles,&data);
     add_dongles_to_coders(&data,data.coders,data.dongles);
     create_coders(&data.args, data.coders);
+
+    pthread_mutex_init(&data.dongles->queue->queue_lock, NULL);
+    if (data.args.scheduler == fifo)
+    {
+        data.dongles->queue = alocate_queue();
+        create_queue_array(&data);
+    }
+   
     
     //printf("\n%d\n",arg.number_of_coders);
     /*int i = 0 ;
@@ -88,6 +104,7 @@ int main(int argc, char **argv){
         i++;
     }*/
     pthread_t m_check;
+    
     
     pthread_create(&m_check,NULL,monitor_check, &data);
     int i = 0;

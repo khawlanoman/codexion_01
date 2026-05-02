@@ -87,15 +87,15 @@ int main(int argc, char **argv){
 
     init_dongles(data.dongles,&data);
     add_dongles_to_coders(&data,data.coders,data.dongles);
-    create_coders(&data.args, data.coders);
 
-    pthread_mutex_init(&data.dongles->queue->queue_lock, NULL);
-    if (data.args.scheduler == fifo)
-    {
-        data.dongles->queue = alocate_queue();
-        create_queue_array(&data);
-    }
-   
+
+    // if (data.args.scheduler == fifo)
+    // {
+    //     data.queue = alocate_queue();
+    //     create_queue_array(&data);
+    //     pthread_mutex_init(&data.queue->queue_lock, NULL);
+    // }
+    create_coders(&data.args, data.coders);
     
     //printf("\n%d\n",arg.number_of_coders);
     /*int i = 0 ;

@@ -31,6 +31,7 @@ t_dongle *create_array_dongles(t_data *data){
 }
 
 
+
 void init_dongles(t_dongle *dongles, t_data *data){
 
     int number_dongles;
@@ -42,12 +43,24 @@ void init_dongles(t_dongle *dongles, t_data *data){
      while (i < number_dongles)
     {
        pthread_mutex_init(&dongles[i].mutex, NULL);
-       dongles[i].last_used_time = 0;
+
+       if (data->args.scheduler == fifo)
+       {
+            dongles[i].queue = alocate_queue();
+            pthread_mutex_init(&dongles[i].queue->queue_lock, NULL);
+
+            dongles[i].queue->arr[0] = i + 1;
+
+            if (i == 0)
+                dongles[i].queue->arr[1] = number_dongles;
+            else
+                dongles[i].queue->arr[1] =  i;
+       }
+    //    printf("\n arr:%d, %d\n", dongles[i].queue->arr[0], dongles[i].queue->arr[1]);
        i++;
-    }
-
+    } 
+    
 }
-
 
 
 void add_dongles_to_coders(t_data *data, t_coder *coder, t_dongle *dongles){
@@ -65,6 +78,7 @@ void add_dongles_to_coders(t_data *data, t_coder *coder, t_dongle *dongles){
     while(i < number_coder){
         coder[i].left_dongle = &dongles[i];
         coder[i].right_dongle = &dongles[(i +1) % number_coder];
+        
         i++;
     }
 }

@@ -28,10 +28,10 @@ void *thread_f(void *arg)
 
         if (coder->data->args.scheduler == fifo)
         {
-            add_to_queue(coder->data, coder->id);
+            
 
             while (!get_stop(coder->data) &&
-                first_queue_id(coder->data->dongles->queue) != coder->id)
+                (first_queue(coder->left_dongle->queue) != coder->id))
             {
                 usleep(500);
             }
@@ -42,8 +42,7 @@ void *thread_f(void *arg)
            
              return NULL;
         }
-           
-
+        
         time_now = time_current();
         timestamp = time_now - coder->data->start_time;
 
@@ -73,15 +72,17 @@ void *thread_f(void *arg)
         //usleep(coder->data->args.time_to_compile * 1000);
         smart_sleep(coder->data->args.time_to_compile,coder);
         
-        pthread_mutex_unlock(&coder->right_dongle->mutex); 
-        pthread_mutex_unlock(&coder->left_dongle->mutex);
+        pthread_mutex_unlock(&coder->second->mutex); 
+        pthread_mutex_unlock(&coder->first->mutex);
 
        
         smart_sleep(coder->data->args.dongle_cooldown,coder);
 
-        // if (coder->data->args.scheduler == fifo){
-        //     remove_first_queue_id(coder->data->dongles->queue);
-        // }
+        if (coder->data->args.scheduler == fifo){
+            rotate_queue_arr(coder->right_dongle->queue);
+            
+            rotate_queue_arr(coder->left_dongle->queue);
+        }
 
 
         if (get_stop(coder->data))
@@ -170,56 +171,76 @@ void create_coders(t_args *arg, t_coder *arr_coder){
 int lock_dongles(t_coder *coder)
 {
 
-    if (coder->id % 2 == 0)
-    {
-        while (!get_stop(coder->data))
-        {
-            pthread_mutex_lock(&coder->right_dongle->mutex);
+    // if (coder->id % 2 == 0)
+    // {
+    //     while (!get_stop(coder->data))
+    //     {
+    //         pthread_mutex_lock(&coder->right_dongle->mutex);
 
-            if (get_stop(coder->data))
-            {
-                pthread_mutex_unlock(&coder->right_dongle->mutex);
-                return 0;
-            }
+    //         if (get_stop(coder->data))
+    //         {
+    //             pthread_mutex_unlock(&coder->right_dongle->mutex);
+    //             return 0;
+    //         }
 
            
-            pthread_mutex_lock(&coder->left_dongle->mutex);
+    //         pthread_mutex_lock(&coder->left_dongle->mutex);
 
-            if (get_stop(coder->data))
-            {
-                pthread_mutex_unlock(&coder->right_dongle->mutex);
-                pthread_mutex_unlock(&coder->left_dongle->mutex);
-                return 0;
-            }
+    //         if (get_stop(coder->data))
+    //         {
+    //             pthread_mutex_unlock(&coder->right_dongle->mutex);
+    //             pthread_mutex_unlock(&coder->left_dongle->mutex);
+    //             return 0;
+    //         }
 
-            return 1;
-        }
-        return 0;
-    }
-    else
-    {
-        while (!get_stop(coder->data))
-        {
-            pthread_mutex_lock(&coder->left_dongle->mutex);
+    //         return 1;
+    //     }
+    //     return 0;
+    // }
+    // else
+    // {
+    //     while (!get_stop(coder->data))
+    //     {
+    //         pthread_mutex_lock(&coder->left_dongle->mutex);
 
-            if (get_stop(coder->data))
-            {
-                pthread_mutex_unlock(&coder->left_dongle->mutex);
-                return 0;
-            }
+    //         if (get_stop(coder->data))
+    //         {
+    //             pthread_mutex_unlock(&coder->left_dongle->mutex);
+    //             return 0;
+    //         }
             
           
-            pthread_mutex_lock(&coder->right_dongle->mutex);
+    //         pthread_mutex_lock(&coder->right_dongle->mutex);
 
-            if (get_stop(coder->data))
-            {
-                pthread_mutex_unlock(&coder->left_dongle->mutex);
-                pthread_mutex_unlock(&coder->right_dongle->mutex);
-                return 0;
-            }
+    //         if (get_stop(coder->data))
+    //         {
+    //             pthread_mutex_unlock(&coder->left_dongle->mutex);
+    //             pthread_mutex_unlock(&coder->right_dongle->mutex);
+    //             return 0;
+    //         }
 
-            return 1;
-        }
+    //         return 1;
+    //     }
+    //     return 0;
+    // }
+
+    if (!coder || !coder->left_dongle || !coder->right_dongle)
+    {
         return 0;
     }
+    
+    if (coder->left_dongle < coder->right_dongle)
+    {
+       coder->first = coder->left_dongle;
+       coder->second = coder->right_dongle;
+    }
+    else{
+        coder->first = coder->right_dongle;
+        coder->second = coder->left_dongle;
+    }
+
+    pthread_mutex_lock(&coder->first->mutex);
+    pthread_mutex_lock(&coder->second->mutex);
+
+    return 1;
 }

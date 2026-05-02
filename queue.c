@@ -20,66 +20,24 @@ t_queue *alocate_queue(){
        return NULL;
     }
     
+    queue->arr = malloc(sizeof(int) * 2);
+    if (!queue->arr)
+    {
+       return NULL;
+    }
     return queue;
 }
 
-int *create_queue_array(t_data *data){
-    
-    data->dongles->queue->len_queue = 2;
-    data->dongles->queue->arr = malloc(2* sizeof(int));
-    if (!data->dongles->queue->arr)
-    {
-        return NULL;
-    }
-    data->dongles->queue->first = 0;
-    data->dongles->queue->last = -1;
-
-    return (data->dongles->queue->arr);
+int first_queue(t_queue *queue){
+    return  queue->arr[0];
 }
 
 
-int add_to_queue(t_data *data, int coder_id){
-    
-    pthread_mutex_lock(&data->dongles->queue->queue_lock);
-    if (data->dongles->queue->last +1 < data->dongles->queue->len_queue)
-    {
-        data->dongles->queue->last++;
-        data->dongles->queue->arr[data->dongles->queue->last] = coder_id;
-        pthread_mutex_unlock(&data->dongles->queue->queue_lock);
-        return 1;
-    }
-    pthread_mutex_unlock(&data->dongles->queue->queue_lock);
+void rotate_queue_arr(t_queue *queue){
 
-    return 0;
+    int tmp;
 
-
-}
-
-
-int first_queue_id(t_queue *queue){
-
-    int value;
-    pthread_mutex_lock(&queue->queue_lock);
-    if (queue->first <= queue->last)
-    {
-        value = queue->arr[queue->first];
-        pthread_mutex_lock(&queue->queue_lock);
-        return (value);
-    }
-    pthread_mutex_lock(&queue->queue_lock);
-    return -1;
-}
-
-int remove_first_queue_id(t_queue *queue){
-     
-    pthread_mutex_lock(&queue->queue_lock);
-    if (queue->first > queue->last)
-    {
-        queue->first++;
-        pthread_mutex_unlock(&queue->queue_lock);
-        return 1;
-    
-    }
-    pthread_mutex_unlock(&queue->queue_lock);
-     return (0);
+    tmp = queue->arr[0];
+    queue->arr[0]  = queue->arr[1];
+    queue->arr[1] = tmp;
 }

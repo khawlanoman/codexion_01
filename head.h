@@ -54,20 +54,15 @@ typedef struct args {
 
 typedef struct s_queue{
     int *arr;
-    int last;
-    int first;
-    int len_queue;
     pthread_mutex_t queue_lock;
 } t_queue;
 
 typedef struct dongle{
     pthread_mutex_t mutex;
     t_queue *queue;
-    long last_used_time;
+    // long last_used_time;
 
 } t_dongle;
-
-
 
 
 typedef struct s_data
@@ -75,7 +70,6 @@ typedef struct s_data
     t_args args;
     t_coder *coders;
     t_dongle *dongles;
-  
     long start_time;
     int stop;
     
@@ -95,6 +89,9 @@ typedef struct s_data
     state_type state;
     t_data *data;
     int finish ;
+
+    t_dongle *first;
+    t_dongle *second;
 } t_coder;
 
 
@@ -134,14 +131,11 @@ int lock_dongles(t_coder *coder);
 
 void smart_sleep(long var,t_coder *coder);
 
-int *create_queue_array(t_data *data);
 
-int add_to_queue(t_data *data, int coder_id);
-int first_queue_id(t_queue *queue);
-
-int remove_first_queue_id(t_queue *queue);
 
 t_queue *alocate_queue();
+int first_queue(t_queue *queue);
+void rotate_queue_arr(t_queue *queue);
 
 
 #endif

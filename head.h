@@ -51,15 +51,22 @@ typedef struct args {
     scheduler_type scheduler;
 }t_args;
 
+typedef struct s_task
+{
+    int id;
+    long long priority;
+} t_task;
 
-typedef struct s_queue{
-    int *arr;
-    pthread_mutex_t queue_lock;
-} t_queue;
-
+typedef struct s_heap
+{
+    t_task *arr;
+    int size;
+    int capacity;
+    pthread_mutex_t lock;
+} t_heap;
 typedef struct dongle{
     pthread_mutex_t mutex;
-    t_queue *queue;
+    // t_queue *queue;
     // long last_used_time;
 
 } t_dongle;
@@ -71,6 +78,7 @@ typedef struct s_data
     t_coder *coders;
     t_dongle *dongles;
     long start_time;
+    t_heap *heap;
     int stop;
     
     pthread_mutex_t print_lock;
@@ -132,10 +140,11 @@ int lock_dongles(t_coder *coder);
 void smart_sleep(long var,t_coder *coder);
 
 
+t_heap *alocate_heap(int capacity);
+void add_heap(t_heap *heap, t_task task);
+void swap_task(t_task *a, t_task *b);
+void heap_check(t_heap *heap, int i);
 
-t_queue *alocate_queue();
-int first_queue(t_queue *queue);
-void rotate_queue_arr(t_queue *queue);
-
-
+void heap_task_down(t_heap *heap , int i);
+t_task extract_min(t_heap *heap);
 #endif

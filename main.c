@@ -73,7 +73,8 @@ int main(int argc, char **argv){
    
    
 
-
+    data.heap = alocate_heap(data.args.number_of_coders);
+    
     data.coders = create_array_coders(&data);
     data.coders->last_compile_time = data.start_time;
     data.dongles = create_array_dongles(&data);

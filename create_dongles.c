@@ -46,27 +46,27 @@ void init_dongles(t_dongle *dongles, t_data *data){
 
        if (data->args.scheduler == fifo)
        {
-            dongles[i].queue = alocate_queue();
-            pthread_mutex_init(&dongles[i].queue->queue_lock, NULL);
+            // dongles[i].queue = alocate_queue();
+            // pthread_mutex_init(&dongles[i].queue->queue_lock, NULL);
 
-            dongles[i].queue->arr[0] = i + 1;
+            // dongles[i].queue->arr[0] = i + 1;
 
-            if (i == 0){
-                if (i % 2 == 0)
-                {
-                     dongles[i].queue->arr[1] = number_dongles;
-                }
-                else
-                    dongles[i].queue->arr[0] = i + 1;
-            }
-            else{
-                if (i % 2 == 0)
-                {
-                   dongles[i].queue->arr[1] =  i;
-                }
-                else
-                    dongles[i].queue->arr[0] = i + 1;
-            }
+            // if (i == 0){
+            //     if (i % 2 == 0)
+            //     {
+            //          dongles[i].queue->arr[1] = number_dongles;
+            //     }
+            //     else
+            //         dongles[i].queue->arr[0] = i + 1;
+            // }
+            // else{
+            //     if (i % 2 == 0)
+            //     {
+            //        dongles[i].queue->arr[1] =  i;
+            //     }
+            //     else
+            //         dongles[i].queue->arr[0] = i + 1;
+            // }
                
        }
     //    printf("\n arr:%d, %d\n", dongles[i].queue->arr[0], dongles[i].queue->arr[1]);

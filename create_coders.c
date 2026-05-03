@@ -13,107 +13,97 @@
 
 void *thread_f(void *arg)
 {
-    t_coder *coder;
-    long long time_now;
+    t_coder *coder = (t_coder *)arg;
+    t_task task;
     long long timestamp;
 
-    coder = (t_coder *)arg;
     while (!get_stop(coder->data) && !coder->finish)
     {
+        // stop condition
         if (coder->compile_count >= coder->data->args.number_of_compiles_required)
-        {     
-                coder->finish = 1;
-                return NULL;
+        {
+            coder->finish = 1;
+            return NULL;
         }
+
+
+        //  create task
+        task.id = coder->id;
 
         if (coder->data->args.scheduler == fifo)
-        {
-            
+            task.priority = coder->id;  
+        //else
+         //   task.priority = coder->deadline;       
 
-            while (!get_stop(coder->data) &&
-                (first_queue(coder->left_dongle->queue) != coder->id))
+        
+        // add heap
+
+        pthread_mutex_lock(&coder->data->heap->lock);
+        add_heap(coder->data->heap, task);
+        pthread_mutex_unlock(&coder->data->heap->lock);
+
+       
+       //check and wait
+        while (!get_stop(coder->data))
+        {
+            pthread_mutex_lock(&coder->data->heap->lock);
+
+            if (coder->data->heap->arr[0].id == coder->id)
             {
-                usleep(500);
+                pthread_mutex_unlock(&coder->data->heap->lock);
+                break;
             }
+
+            pthread_mutex_unlock(&coder->data->heap->lock);
+            usleep(500);
         }
 
-        if (lock_dongles(coder)== 0)
-        {
-           
-             return NULL;
-        }
         
-        time_now = time_current();
-        timestamp = time_now - coder->data->start_time;
+        if (lock_dongles(coder) == 0)
+            return NULL;
 
-        pthread_mutex_lock(&coder->data->print_lock);
+        timestamp = time_current() - coder->data->start_time;
         printf("%lld %d has taken a dongle\n", timestamp, coder->id);
         printf("%lld %d has taken a dongle\n", timestamp, coder->id);
-        pthread_mutex_unlock(&coder->data->print_lock);
+
         
-      
-       
-         if (get_stop(coder->data))
-         {
-             return NULL;
-         }
-         
-        time_now = time_current();
+        coder->last_compile_time = time_current();
 
-        pthread_mutex_lock(&coder->data->m_last_compile);
-        coder->last_compile_time = time_now;
-        pthread_mutex_unlock(&coder->data->m_last_compile);
-
-        timestamp = time_now - coder->data->start_time;
-        pthread_mutex_lock(&coder->data->print_lock);
+        timestamp = time_current() - coder->data->start_time;
         printf("%lld %d is compiling\n", timestamp, coder->id);
-        pthread_mutex_unlock(&coder->data->print_lock);
-         coder->compile_count++;
-        //usleep(coder->data->args.time_to_compile * 1000);
-        smart_sleep(coder->data->args.time_to_compile,coder);
+
+        coder->compile_count++;
+
+        smart_sleep(coder->data->args.time_to_compile, coder);
+
         
-        pthread_mutex_unlock(&coder->second->mutex); 
-        pthread_mutex_unlock(&coder->first->mutex);
+        pthread_mutex_unlock(&coder->right_dongle->mutex);
+        pthread_mutex_unlock(&coder->left_dongle->mutex);
+
+
+        //  remove form heap
+
+        pthread_mutex_lock(&coder->data->heap->lock);
+        extract_min(coder->data->heap);
+        pthread_mutex_unlock(&coder->data->heap->lock);
 
        
-        smart_sleep(coder->data->args.dongle_cooldown,coder);
-
-        if (coder->data->args.scheduler == fifo){
-            rotate_queue_arr(coder->right_dongle->queue);
-            
-            rotate_queue_arr(coder->left_dongle->queue);
-        }
-
+        smart_sleep(coder->data->args.time_to_debug, coder);
 
         if (get_stop(coder->data))
             return NULL;
-        
-        time_now = time_current();
-        timestamp = time_now - coder->data->start_time;
-        pthread_mutex_lock(&coder->data->print_lock);
-        printf("%lld %d is debuging\n", timestamp, coder->id);
-        pthread_mutex_unlock(&coder->data->print_lock);
 
-        //usleep(coder->data->args.time_to_debug * 1000);
-        smart_sleep(coder->data->args.time_to_debug,coder);
-        
-        
+        timestamp = time_current() - coder->data->start_time;
+        printf("%lld %d is debugging\n", timestamp, coder->id);
+
+      
+        smart_sleep(coder->data->args.time_to_refactor, coder);
+
         if (get_stop(coder->data))
             return NULL;
-        
-        time_now = time_current();
-        timestamp = time_now - coder->data->start_time;
-        pthread_mutex_lock(&coder->data->print_lock);
+
+        timestamp = time_current() - coder->data->start_time;
         printf("%lld %d is refactoring\n", timestamp, coder->id);
-        pthread_mutex_unlock(&coder->data->print_lock);
-
-        //usleep(coder->data->args.time_to_refactor * 1000);
-        smart_sleep(coder->data->args.time_to_refactor,coder);
-
-        if (get_stop(coder->data))
-            return NULL;
-
-       
     }
 
     return NULL;

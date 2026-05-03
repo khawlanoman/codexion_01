@@ -73,7 +73,7 @@ void *monitor_check(void *d){
             }
            
            
-            usleep(10);
+            usleep(800);
             i++;
         }
 

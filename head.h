@@ -80,7 +80,7 @@ typedef struct s_data
     long start_time;
     t_heap *heap;
     int stop;
-    
+    int fifo_order;
     pthread_mutex_t print_lock;
     pthread_mutex_t m_stop;
     pthread_mutex_t m_last_compile;

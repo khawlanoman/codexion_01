@@ -60,7 +60,7 @@ int main(int argc, char **argv){
     data.dongles = NULL;
     data.start_time = time_current();
     data.stop = 0;
-    
+    data.fifo_order = 0;
     pthread_mutex_init(&data.print_lock, NULL);
     data.stop = 0;
    /* int i = 1;

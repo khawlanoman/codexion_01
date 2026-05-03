@@ -65,9 +65,6 @@ void heap_check(t_heap *heap, int i){
    
 }
 
-
-
-
 void heap_task_down(t_heap *heap , int i){
    int left_child;
    int right_child;
@@ -77,18 +74,21 @@ void heap_task_down(t_heap *heap , int i){
    {
         right_child = (2 * i) + 2;
         left_child = (2 * i)+ 1;
-   
-        if ( right_child < heap->size && heap->arr[i].priority < heap->arr[right_child].priority)
+        small = i;
+        if ( left_child < heap-> size && heap->arr[left_child].priority < heap->arr[small].priority)
+            small = left_child;
+        
+        if ( right_child < heap->size && heap->arr[right_child].priority < heap->arr[small].priority)
             small = right_child;
     
-        if ( left_child < heap-> size && heap->arr[i].priority < heap->arr[left_child].priority)
-            small = left_child;
  
         if (small == i)
         {
             break;
         }
+        //printf("swap i=%d size=%d\n", i, heap->size);
 
+        //printf("smallest=%d\n", small);
         swap_task(&heap->arr[i], &heap->arr[small]);
         i = small;
         

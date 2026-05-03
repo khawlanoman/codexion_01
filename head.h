@@ -66,9 +66,6 @@ typedef struct s_heap
 } t_heap;
 typedef struct dongle{
     pthread_mutex_t mutex;
-    // t_queue *queue;
-    // long last_used_time;
-
 } t_dongle;
 
 
@@ -81,6 +78,12 @@ typedef struct s_data
     t_heap *heap;
     int stop;
     int fifo_order;
+
+    int group;
+    int group_count;
+
+    pthread_mutex_t group_lock;
+    pthread_cond_t goup_done;
     pthread_mutex_t print_lock;
     pthread_mutex_t m_stop;
     pthread_mutex_t m_last_compile;
@@ -97,7 +100,7 @@ typedef struct s_data
     state_type state;
     t_data *data;
     int finish ;
-
+    int my_group;
     t_dongle *first;
     t_dongle *second;
 } t_coder;
@@ -147,4 +150,8 @@ void heap_check(t_heap *heap, int i);
 
 void heap_task_down(t_heap *heap , int i);
 t_task extract_min(t_heap *heap);
+
+
+
+void *controller(t_data * data);
 #endif

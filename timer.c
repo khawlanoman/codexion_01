@@ -43,7 +43,7 @@ long long time_current(void){
 void *monitor_check(void *d){
      int i;
      long long now ;
-    //  long long timestamp;
+     long long timestamp;
      int number_coder;
      t_data *data;
      data = (t_data *)d;
@@ -54,26 +54,28 @@ void *monitor_check(void *d){
      {
         i = 0;
        
-        now = time_current() - data->start_time;
+        now = time_current();
         while (i < number_coder)
         {
-           long long  x = data->coders[i].last_compile_time + data->args.time_to_burnout;
+            pthread_mutex_lock(&data->m_last_compile);
+           long long  x = data->coders[i].last_compile_time;
+           pthread_mutex_unlock(&data->m_last_compile);
         //    printf("{x = %lld, now = %lld}", x, now);
-            if (now >= x){
+            if (now -  x > data->args.time_to_burnout){
                 set_stop(data);
                 pthread_mutex_lock(&data->m_stop);
                 data->stop = 1;
                 pthread_mutex_unlock(&data->m_stop);
                 
                 pthread_mutex_lock(&data->print_lock);
-                // timestamp = now - data->coders[i].data->start_time;
-                printf("%lld %d burned out\n",now, data->coders[i].id);
+                timestamp = now - data->coders[i].data->start_time;
+                printf("%lld %d burned out\n",timestamp, data->coders[i].id);
                 pthread_mutex_unlock(&data->print_lock);
                 return NULL;
             }
            
            
-            usleep(800);
+            usleep(10);
             i++;
         }
 
@@ -119,4 +121,38 @@ void smart_sleep(long var,t_coder *coder){
             break;
      usleep(500);
    }
+}
+
+
+void *controller(t_data *data)
+{
+    int current_group = 0;
+
+    while (!get_stop(data))
+    {
+      
+        pthread_mutex_lock(&data->group_lock);
+        data->group = current_group;
+        data->group_count = 0;               
+        pthread_mutex_unlock(&data->group_lock);
+
+      
+        while (!get_stop(data))
+        {
+            pthread_mutex_lock(&data->group_lock);
+            if (data->group_count == 0)
+            {
+                pthread_mutex_unlock(&data->group_lock);
+                break;
+            }
+            pthread_mutex_unlock(&data->group_lock);
+            usleep(1000); 
+        }
+
+        if (get_stop(data))
+            break;
+
+        current_group = 1 - current_group;  
+    }
+    return NULL;
 }

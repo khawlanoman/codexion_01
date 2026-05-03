@@ -76,34 +76,22 @@ int main(int argc, char **argv){
     data.heap = alocate_heap(data.args.number_of_coders);
     
     data.coders = create_array_coders(&data);
+    data.group = 0;
+    data.group_count = 0;
+    //controller(&data);
     data.coders->last_compile_time = data.start_time;
     data.dongles = create_array_dongles(&data);
     if (!data.coders || !data.dongles){
         return 1;
     }
 
-
-   
-
-
     init_dongles(data.dongles,&data);
     add_dongles_to_coders(&data,data.coders,data.dongles);
 
 
-    // if (data.args.scheduler == fifo)
-    // {
-    //     data.queue = alocate_queue();
-    //     create_queue_array(&data);
-    //     pthread_mutex_init(&data.queue->queue_lock, NULL);
-    // }
     create_coders(&data.args, data.coders);
     
-    //printf("\n%d\n",arg.number_of_coders);
-    /*int i = 0 ;
-    while (i< arg.number_of_coders){
-        printf("%d left: %p right: %p\n",data.coders[i].id, (void *)data.coders[i].left_dongle, (void *)data.coders[i].right_dongle);
-        i++;
-    }*/
+    
     pthread_t m_check;
     
     

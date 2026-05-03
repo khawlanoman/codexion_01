@@ -22,14 +22,34 @@ void *thread_f(void *arg)
 
     while (!get_stop(coder->data) && !coder->finish)
     {
-       
         if (coder->compile_count >= coder->data->args.number_of_compiles_required)
         {
             coder->finish = 1;
             return (NULL);
         }
 
-      
+        // if (coder->id % 2 == 0)
+        // {
+        //     coder->my_group = 1;
+        // }
+        // else
+        //     coder->my_group = 0;
+
+
+        // while (!get_stop(coder->data))
+        // {
+        //     pthread_mutex_lock(&coder->data->group_lock);
+        //     if (coder->data->group == coder->my_group)
+        //     {
+        //         coder->data->group_count++;
+        //         pthread_mutex_unlock(&coder->data->group_lock);
+        //         break;
+        //     }
+        //     pthread_mutex_unlock(&coder->data->group_lock);
+        //     usleep(500);
+        // }
+
+
 
         task.id = coder->id;
 
@@ -37,8 +57,9 @@ void *thread_f(void *arg)
 
         if (coder->data->args.scheduler == fifo)
             task.priority = coder->data->fifo_order++;
-        /* else
-            task.priority = coder->deadline; */
+        if (coder->data->args.scheduler == edf)
+            task.priority = coder->last_compile_time + coder->data->args.time_to_burnout; 
+
         add_heap(coder->data->heap, task);
 
         pthread_mutex_unlock(&coder->data->heap->lock);
@@ -59,6 +80,8 @@ void *thread_f(void *arg)
             usleep(500);
         }
 
+        if (get_stop(coder->data))
+            return (NULL);
 
         if (lock_dongles(coder) == 0)
             return (NULL);
@@ -67,6 +90,9 @@ void *thread_f(void *arg)
         timestamp = time_now - coder->data->start_time;
 
         pthread_mutex_lock(&coder->data->print_lock);
+        // printf("\nmy_group %d\n",coder->my_group);
+        // printf("\ngroup %d\n",coder->data->group);
+        // printf("\ngroup_count %d\n",coder->data->group_count);
         printf("%lld %d has taken a dongle\n", timestamp, coder->id);
         printf("%lld %d has taken a dongle\n", timestamp, coder->id);
         pthread_mutex_unlock(&coder->data->print_lock);
@@ -94,13 +120,17 @@ void *thread_f(void *arg)
         pthread_mutex_unlock(&coder->second->mutex);
         pthread_mutex_unlock(&coder->first->mutex);
 
-       
+      
 
         pthread_mutex_lock(&coder->data->heap->lock);
         extract_min(coder->data->heap);
         pthread_mutex_unlock(&coder->data->heap->lock);
 
       
+
+       pthread_mutex_lock(&coder->data->group_lock);
+        coder->data->group_count--;
+        pthread_mutex_unlock(&coder->data->group_lock);
 
         smart_sleep(coder->data->args.dongle_cooldown,coder);
 

@@ -73,7 +73,7 @@ void *thread_f(void *arg)
         {
             pthread_mutex_lock(&coder->data->heap->lock);
 
-            if (coder->data->heap->size > 0 && coder->data->heap->arr[0].id == coder->id)
+            if (coder->data->heap->size > 0 )
             {
                 pthread_mutex_unlock(&coder->data->heap->lock);
                 break;

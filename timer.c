@@ -126,33 +126,29 @@ void smart_sleep(long var,t_coder *coder){
 
 void *controller(t_data *data)
 {
-    int current_group = 0;
+    
 
     while (!get_stop(data))
     {
       
-        pthread_mutex_lock(&data->group_lock);
-        data->group = current_group;
-        data->group_count = 0;               
-        pthread_mutex_unlock(&data->group_lock);
-
-      
-        while (!get_stop(data))
         {
             pthread_mutex_lock(&data->group_lock);
-            if (data->group_count == 0)
+            if (data->group == 0 && data->group_count_one == 0 )
             {
+                data->group = 1;
+                pthread_mutex_unlock(&data->group_lock);
+                break;
+            }
+            if (data->group == 1 && data->group_count_two == 0)
+            {
+                data->group = 0;
                 pthread_mutex_unlock(&data->group_lock);
                 break;
             }
             pthread_mutex_unlock(&data->group_lock);
-            usleep(1000); 
+
         }
-
-        if (get_stop(data))
-            break;
-
-        current_group = 1 - current_group;  
+  
     }
     return NULL;
 }

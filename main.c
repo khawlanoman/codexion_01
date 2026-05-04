@@ -77,8 +77,21 @@ int main(int argc, char **argv){
     
     data.coders = create_array_coders(&data);
     data.group = 0;
-    data.group_count = 0;
-    //controller(&data);
+
+
+      pthread_mutex_lock(&data.group_lock);
+    if (data.args.number_of_coders % 2 == 0)
+    {
+        data.group_count_two = data.args.number_of_coders / 2;
+        data.group_count_one = data.args.number_of_coders / 2;
+    }
+    else{
+         data.group_count_two =  data.args.number_of_coders / 2;
+         data.group_count_one = ( data.args.number_of_coders / 2) + 1;
+    }
+    pthread_mutex_unlock(&data.group_lock);
+
+    controller(&data);
     data.coders->last_compile_time = data.start_time;
     data.dongles = create_array_dongles(&data);
     if (!data.coders || !data.dongles){
@@ -91,7 +104,8 @@ int main(int argc, char **argv){
 
     create_coders(&data.args, data.coders);
     
-    
+  
+
     pthread_t m_check;
     
     

@@ -80,8 +80,8 @@ typedef struct s_data
     int fifo_order;
 
     int group;
-    int group_count;
-
+    int group_count_one;
+    int group_count_two;
     pthread_mutex_t group_lock;
     pthread_cond_t goup_done;
     pthread_mutex_t print_lock;

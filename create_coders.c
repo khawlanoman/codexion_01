@@ -20,6 +20,10 @@ void *thread_f(void *arg)
 
     coder = (t_coder *)arg;
 
+        // time_now = time_current();
+        // timestamp = time_now - coder->data->start_time;
+        // printf("[coder_id:%d, time:%lld]\n",coder->id,timestamp);
+
     while (!get_stop(coder->data) && !coder->finish)
     {
         if (coder->compile_count >= coder->data->args.number_of_compiles_required)
@@ -28,26 +32,26 @@ void *thread_f(void *arg)
             return (NULL);
         }
 
-        // if (coder->id % 2 == 0)
-        // {
-        //     coder->my_group = 1;
-        // }
-        // else
-        //     coder->my_group = 0;
+        if (coder->id % 2 == 0)
+        {
+            coder->my_group = 1;
+          
+        }
+        else
+            coder->my_group = 0;
 
-
-        // while (!get_stop(coder->data))
-        // {
-        //     pthread_mutex_lock(&coder->data->group_lock);
-        //     if (coder->data->group == coder->my_group)
-        //     {
-        //         coder->data->group_count++;
-        //         pthread_mutex_unlock(&coder->data->group_lock);
-        //         break;
-        //     }
-        //     pthread_mutex_unlock(&coder->data->group_lock);
-        //     usleep(500);
-        // }
+        while (!get_stop(coder->data))
+        {
+            pthread_mutex_lock(&coder->data->group_lock);
+            if (coder->data->group == coder->my_group)
+            {
+                 
+                pthread_mutex_unlock(&coder->data->group_lock);
+                break;
+            }
+            pthread_mutex_unlock(&coder->data->group_lock);
+            usleep(500);
+        }
 
 
 
@@ -64,7 +68,6 @@ void *thread_f(void *arg)
 
         pthread_mutex_unlock(&coder->data->heap->lock);
 
-        
 
         while (!get_stop(coder->data))
         {
@@ -77,7 +80,7 @@ void *thread_f(void *arg)
             }
 
             pthread_mutex_unlock(&coder->data->heap->lock);
-            usleep(500);
+            usleep(50);
         }
 
         if (get_stop(coder->data))
@@ -128,8 +131,11 @@ void *thread_f(void *arg)
 
       
 
-       pthread_mutex_lock(&coder->data->group_lock);
-        coder->data->group_count--;
+        pthread_mutex_lock(&coder->data->group_lock);
+        if (coder->id % 2 == 0)
+            coder->data->group_count_two--;
+        else
+            coder->data->group_count_one--;
         pthread_mutex_unlock(&coder->data->group_lock);
 
         smart_sleep(coder->data->args.dongle_cooldown,coder);

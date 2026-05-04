@@ -109,7 +109,7 @@ void *thread_f(void *arg)
         coder->last_compile_time = time_now;
         pthread_mutex_unlock(&coder->data->m_last_compile);
 
-      
+        time_now = time_current();
         timestamp = time_now - coder->data->start_time;
         pthread_mutex_lock(&coder->data->print_lock);
         printf("%lld %d is compiling\n", timestamp, coder->id);

@@ -79,6 +79,7 @@ typedef struct s_data
     int stop;
     int fifo_order;
 
+    pthread_t controller_thread;
     int group;
     int group_count_one;
     int group_count_two;
@@ -153,5 +154,5 @@ t_task extract_min(t_heap *heap);
 
 
 
-void *controller(t_data * data);
+void *controller(void *arg);
 #endif

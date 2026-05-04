@@ -123,32 +123,41 @@ void smart_sleep(long var,t_coder *coder){
    }
 }
 
-
-void *controller(t_data *data)
+void *controller(void *arg)
 {
-    
+    t_data *data;
+
+    data = (t_data *)arg;
 
     while (!get_stop(data))
     {
-      
-        {
-            pthread_mutex_lock(&data->group_lock);
-            if (data->group == 0 && data->group_count_one == 0 )
-            {
-                data->group = 1;
-                pthread_mutex_unlock(&data->group_lock);
-                break;
-            }
-            if (data->group == 1 && data->group_count_two == 0)
-            {
-                data->group = 0;
-                pthread_mutex_unlock(&data->group_lock);
-                break;
-            }
-            pthread_mutex_unlock(&data->group_lock);
+        pthread_mutex_lock(&data->group_lock);
 
+       
+        if (data->group == 0 && data->group_count_one == 0)
+        {
+            data->group = 1;
+
+         
+            if (data->args.number_of_coders % 2 == 0)
+                data->group_count_one = data->args.number_of_coders / 2;
+            else
+                data->group_count_one = (data->args.number_of_coders / 2) + 1;
         }
-  
+
+       
+        if (data->group == 1 && data->group_count_two == 0)
+        {
+            data->group = 0;
+
+           
+            data->group_count_two = data->args.number_of_coders / 2;
+        }
+
+        pthread_mutex_unlock(&data->group_lock);
+
+        usleep(500);
     }
-    return NULL;
+
+    return (NULL);
 }

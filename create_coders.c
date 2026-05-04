@@ -33,10 +33,7 @@ void *thread_f(void *arg)
         }
 
         if (coder->id % 2 == 0)
-        {
             coder->my_group = 1;
-          
-        }
         else
             coder->my_group = 0;
 
@@ -49,8 +46,7 @@ void *thread_f(void *arg)
                 pthread_mutex_unlock(&coder->data->group_lock);
                 break;
             }
-            pthread_mutex_unlock(&coder->data->group_lock);
-            usleep(500);
+            
         }
 
 

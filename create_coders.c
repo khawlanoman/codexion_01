@@ -232,8 +232,25 @@ void create_coders(t_args *arg, t_coder *arr_coder){
 
 int lock_dongles(t_coder *coder)
 {
+    long long timestamp;
+    long long time_now;
     if (!coder || !coder->right_dongle || !coder->left_dongle )
         return 0;
+    
+    if (coder->data->args.number_of_coders == 1)
+    {
+        time_now = time_current();
+        timestamp = time_now - coder->data->start_time;
+        coder->first = coder->left_dongle;
+        pthread_mutex_lock(&coder->first->mutex);
+        pthread_mutex_lock(&coder->data->print_lock);
+        printf("%lld %d has taken a dongle\n", timestamp, coder->id);
+        pthread_mutex_unlock(&coder->data->print_lock);
+
+        pthread_mutex_unlock(&coder->first->mutex);
+    
+        return 0;
+    }
     
     
     if (coder->left_dongle < coder->right_dongle)

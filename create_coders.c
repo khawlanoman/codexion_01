@@ -32,33 +32,37 @@ void *thread_f(void *arg)
             return (NULL);
         }
 
-        if (coder->id % 2 == 0)
-            coder->my_group = 1;
-        else
-            coder->my_group = 0;
+        // if (coder->data->args.scheduler ==fifo)
+        // {
+        //      if (coder->id % 2 == 0)
+        //         coder->my_group = 1;
+        //     else
+        //         coder->my_group = 0;
 
-        while (!get_stop(coder->data))
-        {
-            pthread_mutex_lock(&coder->data->group_lock);
-            if (coder->data->group == coder->my_group)
-            {
-                 
-                pthread_mutex_unlock(&coder->data->group_lock);
-                break;
-            }
-            
-        }
+        //     while (!get_stop(coder->data))
+        //     {
+        //         pthread_mutex_lock(&coder->data->group_lock);
+        //         if (coder->data->group == coder->my_group)
+        //         {
+                    
+        //             pthread_mutex_unlock(&coder->data->group_lock);
+        //             break;
+        //         }
+                
+        //     }
 
-
-
+        // }
+             
         task.id = coder->id;
 
         pthread_mutex_lock(&coder->data->heap->lock);
 
         if (coder->data->args.scheduler == fifo)
             task.priority = coder->data->fifo_order++;
-        if (coder->data->args.scheduler == edf)
+        if (coder->data->args.scheduler == edf){
             task.priority = coder->last_compile_time + coder->data->args.time_to_burnout; 
+        }
+
 
         add_heap(coder->data->heap, task);
 
@@ -111,6 +115,7 @@ void *thread_f(void *arg)
         printf("%lld %d is compiling\n", timestamp, coder->id);
         pthread_mutex_unlock(&coder->data->print_lock);
 
+        printf(" coder : %d priority: %lld \n",coder->id ,task.priority);
         coder->compile_count++;
 
         smart_sleep(coder->data->args.time_to_compile,coder );
@@ -125,14 +130,20 @@ void *thread_f(void *arg)
         extract_min(coder->data->heap);
         pthread_mutex_unlock(&coder->data->heap->lock);
 
+        // if (coder->data->args.scheduler == fifo)
+        // {
+        //     pthread_mutex_lock(&coder->data->group_lock);
+        //     if (coder->id % 2 == 0)
+        //         coder->data->group_count_two--;
+        //     else
+        //         coder->data->group_count_one--;
+        //     pthread_mutex_unlock(&coder->data->group_lock);
+        // }
+        
       
-
-        pthread_mutex_lock(&coder->data->group_lock);
-        if (coder->id % 2 == 0)
-            coder->data->group_count_two--;
-        else
-            coder->data->group_count_one--;
-        pthread_mutex_unlock(&coder->data->group_lock);
+      
+        
+       
 
         smart_sleep(coder->data->args.dongle_cooldown,coder);
 

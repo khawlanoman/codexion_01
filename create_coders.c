@@ -93,7 +93,7 @@ void *thread_f(void *arg)
             pthread_mutex_unlock(&coder->second->mutex);
             return (NULL);
         }
-        
+
         time_now = time_current();
         timestamp = time_now - coder->data->start_time;
 
@@ -232,8 +232,9 @@ void create_coders(t_args *arg, t_coder *arr_coder){
 
 int lock_dongles(t_coder *coder)
 {
-    if (!coder || !coder->left_dongle || !coder->right_dongle)
+    if (!coder || !coder->right_dongle || !coder->left_dongle )
         return 0;
+    
     
     if (coder->left_dongle < coder->right_dongle)
     {
@@ -245,8 +246,24 @@ int lock_dongles(t_coder *coder)
         coder->second = coder->left_dongle;
     }
 
+    if (get_stop(coder->data))
+    {
+        return 0;
+    }
     pthread_mutex_lock(&coder->first->mutex);
+    
+     if (get_stop(coder->data))
+    {
+        pthread_mutex_unlock(&coder->first->mutex);
+        return 0;
+    }
     pthread_mutex_lock(&coder->second->mutex);
+    if (get_stop(coder->data))
+    {
+        pthread_mutex_unlock(&coder->first->mutex);
+        pthread_mutex_unlock(&coder->second->mutex);
+        return 0;
+    }
 
     return 1;
 }

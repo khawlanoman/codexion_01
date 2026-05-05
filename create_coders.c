@@ -86,6 +86,14 @@ void *thread_f(void *arg)
         if (lock_dongles(coder) == 0)
             return (NULL);
 
+
+        if (get_stop(coder->data))
+        {
+            pthread_mutex_unlock(&coder->first->mutex);
+            pthread_mutex_unlock(&coder->second->mutex);
+            return (NULL);
+        }
+        
         time_now = time_current();
         timestamp = time_now - coder->data->start_time;
 

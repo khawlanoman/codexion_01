@@ -32,26 +32,26 @@ void *thread_f(void *arg)
             return (NULL);
         }
 
-        // if (coder->data->args.scheduler ==fifo)
-        // {
-        //      if (coder->id % 2 == 0)
-        //         coder->my_group = 1;
-        //     else
-        //         coder->my_group = 0;
+        if (coder->data->args.scheduler ==fifo)
+        {
+             if (coder->id % 2 == 0)
+                coder->my_group = 1;
+            else
+                coder->my_group = 0;
 
-        //     while (!get_stop(coder->data))
-        //     {
-        //         pthread_mutex_lock(&coder->data->group_lock);
-        //         if (coder->data->group == coder->my_group)
-        //         {
+            while (!get_stop(coder->data))
+            {
+                pthread_mutex_lock(&coder->data->group_lock);
+                if (coder->data->group == coder->my_group)
+                {
                     
-        //             pthread_mutex_unlock(&coder->data->group_lock);
-        //             break;
-        //         }
+                    pthread_mutex_unlock(&coder->data->group_lock);
+                    break;
+                }
                 
-        //     }
+            }
 
-        // }
+        }
              
         task.id = coder->id;
 
@@ -62,10 +62,7 @@ void *thread_f(void *arg)
         if (coder->data->args.scheduler == edf){
             task.priority = coder->last_compile_time + coder->data->args.time_to_burnout; 
         }
-
-
         add_heap(coder->data->heap, task);
-
         pthread_mutex_unlock(&coder->data->heap->lock);
 
 
@@ -115,11 +112,11 @@ void *thread_f(void *arg)
         printf("%lld %d is compiling\n", timestamp, coder->id);
         pthread_mutex_unlock(&coder->data->print_lock);
 
-        printf(" coder : %d priority: %lld \n",coder->id ,task.priority);
+        // printf(" coder : %d priority: %lld , id = %d\n",coder->id ,task.priority, task.id);
+        
         coder->compile_count++;
 
         smart_sleep(coder->data->args.time_to_compile,coder );
-
 
         pthread_mutex_unlock(&coder->second->mutex);
         pthread_mutex_unlock(&coder->first->mutex);
@@ -130,20 +127,17 @@ void *thread_f(void *arg)
         extract_min(coder->data->heap);
         pthread_mutex_unlock(&coder->data->heap->lock);
 
-        // if (coder->data->args.scheduler == fifo)
-        // {
-        //     pthread_mutex_lock(&coder->data->group_lock);
-        //     if (coder->id % 2 == 0)
-        //         coder->data->group_count_two--;
-        //     else
-        //         coder->data->group_count_one--;
-        //     pthread_mutex_unlock(&coder->data->group_lock);
-        // }
+        if (coder->data->args.scheduler == fifo)
+        {
+            pthread_mutex_lock(&coder->data->group_lock);
+            if (coder->id % 2 == 0)
+                coder->data->group_count_two--;
+            else
+                coder->data->group_count_one--;
+            pthread_mutex_unlock(&coder->data->group_lock);
+        }
         
-      
-      
-        
-       
+
 
         smart_sleep(coder->data->args.dongle_cooldown,coder);
 
@@ -191,9 +185,8 @@ t_coder *create_array_coders(t_data *data){
     number_coders = data->args.number_of_coders;
     
     arr_coders = malloc((number_coders) * sizeof(t_coder));
-    if (!arr_coders){
+    if (!arr_coders)
         return NULL;
-    }
     while (i < number_coders)
     {
         arr_coders[i].id = i + 1;
@@ -213,14 +206,12 @@ t_coder *create_array_coders(t_data *data){
 
 void create_coders(t_args *arg, t_coder *arr_coder){
 
-    if (arg == NULL || arg->number_of_coders <= 0){
+    if (arg == NULL || arg->number_of_coders <= 0)
         return ;
-    }
     int number_coder;
-   
+    int i;
 
     number_coder =  arg->number_of_coders;
-    int i;
     i = 0;
  
     while (i < number_coder)
@@ -234,9 +225,7 @@ void create_coders(t_args *arg, t_coder *arr_coder){
 int lock_dongles(t_coder *coder)
 {
     if (!coder || !coder->left_dongle || !coder->right_dongle)
-    {
         return 0;
-    }
     
     if (coder->left_dongle < coder->right_dongle)
     {

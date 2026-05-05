@@ -76,27 +76,28 @@ int main(int argc, char **argv){
     data.heap = alocate_heap(data.args.number_of_coders);
     
     data.coders = create_array_coders(&data);
-   data.group = 0;
+    data.group = 0;
 
-    // if (data.args.scheduler == fifo)
-    // {
-    //      pthread_mutex_lock(&data.group_lock);
+    if (data.args.scheduler == fifo)
+    {
+         
+         pthread_mutex_lock(&data.group_lock);
 
-    //     if (data.args.number_of_coders % 2 == 0)
-    //     {
-    //         data.group_count_one = data.args.number_of_coders / 2;
-    //         data.group_count_two = data.args.number_of_coders / 2;
-    //     }
-    //     else
-    //     {
-    //         data.group_count_one = (data.args.number_of_coders / 2) + 1;
-    //         data.group_count_two = data.args.number_of_coders / 2;
-    //     }
+        if (data.args.number_of_coders % 2 == 0)
+        {
+            data.group_count_one = data.args.number_of_coders / 2;
+            data.group_count_two = data.args.number_of_coders / 2;
+        }
+        else
+        {
+            data.group_count_one = (data.args.number_of_coders / 2) + 1;
+            data.group_count_two = data.args.number_of_coders / 2;
+        }
 
-    //     pthread_mutex_unlock(&data.group_lock);
+        pthread_mutex_unlock(&data.group_lock);
 
-    //     pthread_create(&data.controller_thread, NULL, controller, &data);
-    // }
+        pthread_create(&data.controller_thread, NULL, controller, &data);
+    }
     
        
    

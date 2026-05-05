@@ -77,22 +77,20 @@ void heap_task_down(t_heap *heap , int i){
         small = i;
         if ( left_child < heap-> size )
         {
-            if (heap->arr[left_child].priority == heap->arr[small].priority && heap->arr[left_child].id < heap->arr[small].id)
+            if( heap->arr[left_child].priority < heap->arr[small].priority)
                     small = left_child;
-    
-            else if( heap->arr[left_child].priority < heap->arr[small].priority)
-                    small = left_child;
+
+            // else if (heap->arr[left_child].priority == heap->arr[small].priority && heap->arr[left_child].id < heap->arr[small].id)
+            //         small = left_child;
         }
         
         
          if ( right_child < heap-> size )
         {
-           
-            if (heap->arr[right_child].priority == heap->arr[small].priority && heap->arr[right_child].id < heap->arr[small].id)
+            if( heap->arr[right_child].priority < heap->arr[small].priority)
                 small = right_child;
-            
-            else if( heap->arr[right_child].priority < heap->arr[small].priority)
-                small = right_child;
+            // else if (heap->arr[right_child].priority == heap->arr[small].priority && heap->arr[right_child].id < heap->arr[small].id)
+            //     small = right_child;
         }
         
  

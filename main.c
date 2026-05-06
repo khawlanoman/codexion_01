@@ -98,10 +98,6 @@ int main(int argc, char **argv){
 
         pthread_create(&data.controller_thread, NULL, controller, &data);
     }
-    
-       
-   
-   
 
     data.coders->last_compile_time = data.start_time;
     data.dongles = create_array_dongles(&data);

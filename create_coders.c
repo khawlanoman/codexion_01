@@ -48,7 +48,7 @@ void *thread_f(void *arg)
                     pthread_mutex_unlock(&coder->data->group_lock);
                     break;
                 }
-                
+                pthread_mutex_unlock(&coder->data->group_lock);
             }
 
         }
@@ -135,6 +135,9 @@ void *thread_f(void *arg)
         extract_min(coder->data->heap);
         pthread_mutex_unlock(&coder->data->heap->lock);
 
+
+        smart_sleep(coder->data->args.dongle_cooldown,coder);
+    
         if (coder->data->args.scheduler == fifo)
         {
             pthread_mutex_lock(&coder->data->group_lock);
@@ -147,7 +150,7 @@ void *thread_f(void *arg)
         
 
 
-        smart_sleep(coder->data->args.dongle_cooldown,coder);
+      
 
         if (get_stop(coder->data))
             return (NULL);

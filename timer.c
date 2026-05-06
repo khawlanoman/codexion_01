@@ -60,7 +60,7 @@ void *monitor_check(void *d){
             pthread_mutex_lock(&data->m_last_compile);
            long long  x = data->coders[i].last_compile_time;
            pthread_mutex_unlock(&data->m_last_compile);
-        //    printf("{x = %lld, now = %lld}", x, now);
+         //printf("{x = %lld, now = %lld}", x, now);
             if (now -  x > data->args.time_to_burnout){
                 set_stop(data);
                 pthread_mutex_lock(&data->m_stop);
@@ -156,7 +156,7 @@ void *controller(void *arg)
 
         pthread_mutex_unlock(&data->group_lock);
 
-        usleep(500);
+        usleep(10);
     }
 
     return (NULL);

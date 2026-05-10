@@ -17,7 +17,6 @@ int get_stop(t_data *data){
     pthread_mutex_lock(&data->m_stop);
     value = data->stop;
     pthread_mutex_unlock(&data->m_stop);
-
     return value;
 }
 
@@ -60,13 +59,9 @@ void *monitor_check(void *d){
             pthread_mutex_lock(&data->m_last_compile);
            long long  x = data->coders[i].last_compile_time;
            pthread_mutex_unlock(&data->m_last_compile);
-         //printf("{x = %lld, now = %lld}", x, now);
+        
             if (now -  x > data->args.time_to_burnout){
                 set_stop(data);
-                pthread_mutex_lock(&data->m_stop);
-                data->stop = 1;
-                pthread_mutex_unlock(&data->m_stop);
-                
                 pthread_mutex_lock(&data->print_lock);
                 timestamp = now - data->coders[i].data->start_time;
                 printf("%lld %d burned out\n",timestamp, data->coders[i].id);
@@ -81,16 +76,10 @@ void *monitor_check(void *d){
 
         if (check_coders(data))
             {
-                // set_stop(data);
                 return NULL;
             }
-        // if (stop_f == number_coder)
-        // {
-        //    set_stop(data);
-        //    return NULL;
-        // }
+     
      }
-     printf("success");
     return NULL;
 }
 
@@ -145,17 +134,12 @@ void *controller(void *arg)
                 data->group_count_one = (data->args.number_of_coders / 2) + 1;
         }
 
-       
         if (data->group == 1 && data->group_count_two == 0)
         {
             data->group = 0;
-
-           
             data->group_count_two = data->args.number_of_coders / 2;
         }
-
         pthread_mutex_unlock(&data->group_lock);
-
         usleep(10);
     }
 

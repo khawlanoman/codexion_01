@@ -58,6 +58,7 @@ void *thread_f(void *arg)
         pthread_mutex_lock(&coder->data->heap->lock);
 
         if (coder->data->args.scheduler == fifo)
+        //i need mutex here
             task.priority = coder->data->fifo_order++;
         if (coder->data->args.scheduler == edf){
             task.priority = coder->last_compile_time + coder->data->args.time_to_burnout; 
@@ -66,22 +67,19 @@ void *thread_f(void *arg)
         pthread_mutex_unlock(&coder->data->heap->lock);
 
 
-        while (!get_stop(coder->data))
+// ////
+        pthread_mutex_lock(&coder->data->heap->lock);
+        while (!get_stop(coder->data) && coder->data->heap->size == 0 )
         {
-            pthread_mutex_lock(&coder->data->heap->lock);
-
-            if (coder->data->heap->size > 0 )
-            {
-                pthread_mutex_unlock(&coder->data->heap->lock);
-                break;
-            }
-
-            pthread_mutex_unlock(&coder->data->heap->lock);
-            usleep(50);
+               pthread_cond_wait(&coder->data->cond_check, &coder->data->heap->lock);
         }
 
-        if (get_stop(coder->data))
+        if (get_stop(coder->data)){
+            pthread_mutex_unlock(&coder->data->heap->lock);
             return (NULL);
+        }
+        pthread_mutex_unlock(&coder->data->heap->lock);
+/////
 
         if (lock_dongles(coder) == 0)
             return (NULL);
@@ -147,15 +145,9 @@ void *thread_f(void *arg)
                 coder->data->group_count_one--;
             pthread_mutex_unlock(&coder->data->group_lock);
         }
-        
-
-
-      
 
         if (get_stop(coder->data))
             return (NULL);
-
-        
 
         time_now = time_current();
         timestamp = time_now - coder->data->start_time;
@@ -214,7 +206,6 @@ t_coder *create_array_coders(t_data *data){
    return arr_coders;
 }
 
-
 void create_coders(t_args *arg, t_coder *arr_coder){
 
     if (arg == NULL || arg->number_of_coders <= 0)
@@ -224,14 +215,13 @@ void create_coders(t_args *arg, t_coder *arr_coder){
 
     number_coder =  arg->number_of_coders;
     i = 0;
- 
+
     while (i < number_coder)
    {
         pthread_create(&arr_coder[i].thread, NULL, thread_f, &arr_coder[i]);
         i++;
    }
 }
-
 
 int lock_dongles(t_coder *coder)
 {
@@ -267,12 +257,10 @@ int lock_dongles(t_coder *coder)
     }
 
     if (get_stop(coder->data))
-    {
         return 0;
-    }
     pthread_mutex_lock(&coder->first->mutex);
     
-     if (get_stop(coder->data))
+    if (get_stop(coder->data))
     {
         pthread_mutex_unlock(&coder->first->mutex);
         return 0;

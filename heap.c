@@ -35,8 +35,6 @@ t_heap *alocate_heap(int capacity)
     return heap;
 }
 
-
-
 void swap_task(t_task *a, t_task *b){
 
     t_task tmp;
@@ -86,9 +84,6 @@ void heap_task_down(t_heap *heap , int i){
         {
             break;
         }
-        //printf("swap i=%d size=%d\n", i, heap->size);
-
-        //printf("smallest=%d\n", small);
         swap_task(&heap->arr[i], &heap->arr[small]);
         i = small;
         

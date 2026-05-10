@@ -24,8 +24,6 @@
 #include <sys/time.h>
 
 
-
-
 typedef enum {
     fifo,
     edf
@@ -51,11 +49,13 @@ typedef struct args {
     scheduler_type scheduler;
 }t_args;
 
+
 typedef struct s_task
 {
     int id;
     long long priority;
 } t_task;
+
 
 typedef struct s_heap
 {
@@ -64,6 +64,8 @@ typedef struct s_heap
     int capacity;
     pthread_mutex_t lock;
 } t_heap;
+
+
 typedef struct dongle{
     pthread_mutex_t mutex;
 } t_dongle;
@@ -84,12 +86,13 @@ typedef struct s_data
     int group_count_one;
     int group_count_two;
     pthread_mutex_t group_lock;
-    pthread_cond_t goup_done;
+    pthread_cond_t cond_check;
     pthread_mutex_t print_lock;
     pthread_mutex_t m_stop;
     pthread_mutex_t m_last_compile;
 
 }t_data;
+
 
  typedef struct coder{
     int id;
@@ -119,6 +122,7 @@ char *check_args(t_args *arg);
 char *valid_args(char **argv, int argc);
 
 void create_coders(t_args *arg, t_coder *arr_coder);
+
 t_coder *create_array_coders(t_data *data);
 
 t_dongle *create_array_dongles(t_data *data);
@@ -129,6 +133,7 @@ void init_dongles(t_dongle *dongles, t_data *data);
 
 
 void set_stop(t_data *data);
+
 int get_stop(t_data *data);
 
 long long time_current(void);

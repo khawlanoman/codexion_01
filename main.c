@@ -62,16 +62,11 @@ int main(int argc, char **argv){
     data.stop = 0;
     data.fifo_order = 0;
     pthread_mutex_init(&data.print_lock, NULL);
+    pthread_mutex_init(&data.m_stop,NULL);
+
+    pthread_cond_init(&data.cond_check,NULL);
     data.stop = 0;
-   /* int i = 1;
-    while (i < argc)
-    {
-        printf("%s \t",argv[i]);
-        i++;
-    }
-    */ 
-   
-   
+
 
     data.heap = alocate_heap(data.args.number_of_coders);
     
@@ -126,6 +121,12 @@ int main(int argc, char **argv){
     }
 
     pthread_join(m_check,NULL);
-
+    int k = 0;
+    while (k < arg.number_of_coders)
+    {
+       pthread_mutex_destroy(&data.dongles[k].mutex);
+       k++;
+    }
+    
     return 0;
 }

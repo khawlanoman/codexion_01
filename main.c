@@ -119,14 +119,31 @@ int main(int argc, char **argv){
            i++;
 
     }
+    
 
     pthread_join(m_check,NULL);
+
+
     int k = 0;
     while (k < arg.number_of_coders)
     {
        pthread_mutex_destroy(&data.dongles[k].mutex);
+      
        k++;
     }
+
+    pthread_mutex_destroy(&data.heap->lock);
+    pthread_mutex_destroy(&data.group_lock);
+    pthread_mutex_destroy(&data.print_lock);
+    pthread_mutex_destroy(&data.print_lock);
+    pthread_mutex_destroy(&data.m_stop);
+    pthread_mutex_destroy(&data.m_last_compile);
     
+    free(data.dongles);
+    free(data.coders);
+    
+   
+    free(data.heap->arr);
+    free(data.heap);
     return 0;
 }

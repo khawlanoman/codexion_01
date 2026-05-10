@@ -104,22 +104,27 @@ void add_heap(t_heap *heap, t_task task){
 }
 
 
-t_task extract_min(t_heap *heap)
+void extract_min(t_heap *heap)
 {
-    t_task min_task;
-
-    if (heap->size == 0)
+    if (!heap ||heap->size == 0)
     {
-        min_task.id = -1;
-        min_task.priority = -1;
-        return (min_task);
+        // min_task.id = -1;
+        // min_task.priority = -1;
+        // return (min_task);
+        return;
     }
+    if (heap->size == 1)
+    {
+       heap->size =0;
+       return;
+    }
+    
 
-    min_task = heap->arr[0];
+    // min_task = heap->arr[0];
     heap->arr[0] = heap->arr[heap->size - 1];
     heap->size--;
 
     heap_task_down(heap, 0);
 
-    return (min_task);
+    //return (min_task);
 }

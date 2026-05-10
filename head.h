@@ -155,8 +155,8 @@ void swap_task(t_task *a, t_task *b);
 void heap_check(t_heap *heap, int i);
 
 void heap_task_down(t_heap *heap , int i);
-t_task extract_min(t_heap *heap);
 
+void extract_min(t_heap *heap);
 
 
 void *controller(void *arg);

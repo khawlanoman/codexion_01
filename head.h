@@ -86,12 +86,10 @@ typedef struct s_data
     int group_count_one;
     int group_count_two;
     pthread_mutex_t group_lock;
-    pthread_cond_t cond_thread;
+    pthread_cond_t cond_check;
     pthread_mutex_t print_lock;
     pthread_mutex_t m_stop;
     pthread_mutex_t m_last_compile;
-    pthread_mutex_t monitor_lock;
-    pthread_cond_t monitor_cond;
 
 }t_data;
 
@@ -157,8 +155,8 @@ void swap_task(t_task *a, t_task *b);
 void heap_check(t_heap *heap, int i);
 
 void heap_task_down(t_heap *heap , int i);
+t_task extract_min(t_heap *heap);
 
-void extract_min(t_heap *heap);
 
 
 void *controller(void *arg);

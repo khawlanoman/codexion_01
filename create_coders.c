@@ -44,6 +44,7 @@ void *thread_f(void *arg)
                 pthread_mutex_lock(&coder->data->group_lock);
                 if (coder->data->group == coder->my_group)
                 {
+                    
                     pthread_mutex_unlock(&coder->data->group_lock);
                     break;
                 }
@@ -62,10 +63,8 @@ void *thread_f(void *arg)
         if (coder->data->args.scheduler == edf){
             task.priority = coder->last_compile_time + coder->data->args.time_to_burnout; 
         }
-
-
         add_heap(coder->data->heap, task);
-        pthread_cond_broadcast(&coder->data->cond_thread);
+        pthread_cond_broadcast(&coder->data->cond_check);
         pthread_mutex_unlock(&coder->data->heap->lock);
 
 
@@ -73,7 +72,7 @@ void *thread_f(void *arg)
         pthread_mutex_lock(&coder->data->heap->lock);
         while (!get_stop(coder->data) && coder->data->heap->size == 0 )
         {
-               pthread_cond_wait(&coder->data->cond_thread, &coder->data->heap->lock);
+               pthread_cond_wait(&coder->data->cond_check, &coder->data->heap->lock);
         }
 
         if (get_stop(coder->data)){

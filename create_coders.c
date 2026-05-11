@@ -130,16 +130,20 @@ void *thread_f(void *arg)
 
         smart_sleep(coder->data->args.time_to_compile,coder );
         //usleep(coder->data->args.time_to_compile);
-
+        
         pthread_mutex_unlock(&coder->second->mutex);
         pthread_mutex_unlock(&coder->first->mutex);
 
         //smart_sleep(coder->data->args.dongle_cooldown,coder);
        //usleep(coder->data->args.dongle_cooldown);
+       if (!coder->first || !coder->second)
+            printf("BROKEN POINTER\n");
         time_now = time_current();
         pthread_mutex_lock(&coder->data->dongle_valid);
-        coder->data->dongles->is_valid = time_now + coder->data->args.dongle_cooldown;
-        coder->data->dongles->is_use = 0;
+        coder->first->is_valid = time_now + coder->data->args.dongle_cooldown;
+        coder->first->is_use = 1;
+        coder->second->is_valid = time_now + coder->data->args.dongle_cooldown;
+        coder->second->is_use = 1;
         pthread_mutex_unlock(&coder->data->dongle_valid);
 
         pthread_mutex_lock(&coder->data->heap->lock);
@@ -251,12 +255,8 @@ int lock_dongles(t_coder *coder)
     
         return 0;
     }
-    time_now = time_current();
-    pthread_mutex_lock(&coder->data->dongle_valid);
-    if (time_now >= coder->data->dongles->is_valid && coder->data->dongles->is_use== 1)
-    {
-        
-        coder->data->dongles->is_use = 0;
+
+       
         if (coder->left_dongle < coder->right_dongle)
         {
             coder->first = coder->left_dongle;
@@ -271,7 +271,12 @@ int lock_dongles(t_coder *coder)
             pthread_mutex_unlock(&coder->data->dongle_valid);
             return 0;
         }
-            
+        time_now = time_current();
+    pthread_mutex_lock(&coder->data->dongle_valid);
+    if ((time_now >= coder->first->is_valid  && time_now >= coder->second->is_valid ) && (coder->first->is_use== 0 && coder->second->is_use== 0))
+    {
+        coder->first->is_use= 0;
+        coder->second->is_use= 0;
         pthread_mutex_lock(&coder->first->mutex);
         
         if (get_stop(coder->data))
@@ -289,9 +294,9 @@ int lock_dongles(t_coder *coder)
             return 0;
         }
         pthread_mutex_unlock(&coder->data->dongle_valid);
+        usleep(100);
     }
-    
-    
+
 
     return 1;
 }

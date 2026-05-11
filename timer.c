@@ -70,7 +70,7 @@ void *monitor_check(void *d){
             }
            
            
-           usleep(10);
+           usleep(400);
             i++;
         }
 
@@ -92,9 +92,12 @@ int check_coders(t_data *data){
 
     i = 0;
     while (i < data->args.number_of_coders)
-    {
-        if (data->coders[i].compile_count < data->args.number_of_compiles_required)
+    {   pthread_mutex_lock(&data->compile_count);
+        if (data->coders[i].compile_count < data->args.number_of_compiles_required){
+            pthread_mutex_unlock(&data->compile_count);
             return 0;
+        }
+        pthread_mutex_unlock(&data->compile_count);  
         i++;
     }
     return 1;
@@ -125,7 +128,6 @@ void *controller(void *arg)
     {
         pthread_mutex_lock(&data->group_lock);
 
-       
         if (data->group == 0 && data->group_count_one == 0)
         {
             data->group = 1;

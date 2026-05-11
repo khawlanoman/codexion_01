@@ -61,12 +61,15 @@ int main(int argc, char **argv){
     data.start_time = time_current();
     data.stop = 0;
     data.fifo_order = 0;
+    pthread_mutex_init(&data.group_lock,NULL);
+    pthread_cond_init(&data.cond_check,NULL);
     pthread_mutex_init(&data.print_lock, NULL);
     pthread_mutex_init(&data.m_stop,NULL);
+    pthread_mutex_init(&data.m_last_compile,NULL);
+    pthread_mutex_init(&data.compile_count,NULL);
+    pthread_mutex_init(&data.dongle_valid,NULL);
 
-    pthread_cond_init(&data.cond_check,NULL);
     data.stop = 0;
-
 
     data.heap = alocate_heap(data.args.number_of_coders);
     
@@ -75,7 +78,6 @@ int main(int argc, char **argv){
 
     if (data.args.scheduler == fifo)
     {
-         
          pthread_mutex_lock(&data.group_lock);
 
         if (data.args.number_of_coders % 2 == 0)
@@ -103,10 +105,11 @@ int main(int argc, char **argv){
     init_dongles(data.dongles,&data);
     add_dongles_to_coders(&data,data.coders,data.dongles);
 
+    
 
     create_coders(&data.args, data.coders);
     
-  
+
 
     pthread_t m_check;
     
@@ -134,7 +137,6 @@ int main(int argc, char **argv){
 
     pthread_mutex_destroy(&data.heap->lock);
     pthread_mutex_destroy(&data.group_lock);
-    pthread_mutex_destroy(&data.print_lock);
     pthread_mutex_destroy(&data.print_lock);
     pthread_mutex_destroy(&data.m_stop);
     pthread_mutex_destroy(&data.m_last_compile);

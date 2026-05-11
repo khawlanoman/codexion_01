@@ -67,6 +67,8 @@ typedef struct s_heap
 
 
 typedef struct dongle{
+    long long is_valid;
+    int is_use;
     pthread_mutex_t mutex;
 } t_dongle;
 
@@ -90,7 +92,8 @@ typedef struct s_data
     pthread_mutex_t print_lock;
     pthread_mutex_t m_stop;
     pthread_mutex_t m_last_compile;
-
+    pthread_mutex_t compile_count;
+    pthread_mutex_t dongle_valid;
 }t_data;
 
 

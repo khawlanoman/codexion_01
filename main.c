@@ -64,7 +64,12 @@ int main(int argc, char **argv){
     pthread_mutex_init(&data.print_lock, NULL);
     pthread_mutex_init(&data.m_stop,NULL);
 
-    pthread_cond_init(&data.cond_check,NULL);
+    pthread_cond_init(&data.cond_thread,NULL);
+
+
+    pthread_mutex_init(&data.monitor_lock,NULL);
+    pthread_cond_init(&data.monitor_cond, NULL);
+
     data.stop = 0;
 
 
@@ -131,10 +136,9 @@ int main(int argc, char **argv){
       
        k++;
     }
-
+    /*printf("END PROGRAM\n");
     pthread_mutex_destroy(&data.heap->lock);
     pthread_mutex_destroy(&data.group_lock);
-    pthread_mutex_destroy(&data.print_lock);
     pthread_mutex_destroy(&data.print_lock);
     pthread_mutex_destroy(&data.m_stop);
     pthread_mutex_destroy(&data.m_last_compile);
@@ -145,5 +149,7 @@ int main(int argc, char **argv){
    
     free(data.heap->arr);
     free(data.heap);
+
+    printf("END PROGRAM\n");*/
     return 0;
 }

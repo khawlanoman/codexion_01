@@ -86,10 +86,12 @@ typedef struct s_data
     int group_count_one;
     int group_count_two;
     pthread_mutex_t group_lock;
-    pthread_cond_t cond_check;
+    pthread_cond_t cond_thread;
     pthread_mutex_t print_lock;
     pthread_mutex_t m_stop;
     pthread_mutex_t m_last_compile;
+    pthread_mutex_t monitor_lock;
+    pthread_cond_t monitor_cond;
 
 }t_data;
 

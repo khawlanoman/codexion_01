@@ -70,7 +70,7 @@ void *monitor_check(void *d){
             }
            
            
-            usleep(10);
+           usleep(10);
             i++;
         }
 
@@ -79,6 +79,9 @@ void *monitor_check(void *d){
                 return NULL;
             }
      
+        // pthread_mutex_lock(&data->monitor_lock);
+        // pthread_cond_timedwait(&data->monitor_cond, &data->monitor_lock, 10);
+        // pthread_mutex_unlock(&data->monitor_lock);
      }
     return NULL;
 }

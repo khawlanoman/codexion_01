@@ -115,6 +115,7 @@ int main(int argc, char **argv){
     
     
     pthread_create(&m_check,NULL,monitor_check, &data);
+
     int i = 0;
     while (i < arg.number_of_coders)
     {
@@ -123,10 +124,10 @@ int main(int argc, char **argv){
 
     }
     
-
+    pthread_join(data.controller_thread,NULL);
     pthread_join(m_check,NULL);
 
-
+  
     int k = 0;
     while (k < arg.number_of_coders)
     {

@@ -53,13 +53,13 @@ void *monitor_check(void *d){
      {
         i = 0;
        
-        now = time_current();
+        
         while (i < number_coder)
         {
             pthread_mutex_lock(&data->m_last_compile);
-           long long  x = data->coders[i].last_compile_time;
-           pthread_mutex_unlock(&data->m_last_compile);
-        
+            long long  x = data->coders[i].last_compile_time;
+            pthread_mutex_unlock(&data->m_last_compile);
+            now = time_current();
             if (now -  x > data->args.time_to_burnout){
                 set_stop(data);
                 pthread_mutex_lock(&data->print_lock);

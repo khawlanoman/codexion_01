@@ -45,7 +45,7 @@ void init_dongles(t_dongle *dongles, t_data *data){
        pthread_mutex_init(&dongles[i].mutex, NULL);
     
         dongles[i].is_valid= 0;
-        dongles[i].is_valid = 0;
+        dongles[i].is_use = 0;
         
        i++;
     } 

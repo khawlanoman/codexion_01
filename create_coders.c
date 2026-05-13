@@ -23,12 +23,20 @@ void *thread_f(void *arg)
         // time_now = time_current();
         // timestamp = time_now - coder->data->start_time;
         // printf("[coder_id:%d, time:%lld]\n",coder->id,timestamp);
-
+    pthread_mutex_lock(&coder->data->check_finish);
     while (!get_stop(coder->data) && !coder->finish)
     {
+        pthread_mutex_unlock(&coder->data->check_finish);
+
+        pthread_mutex_lock(&coder->data->last_active_time);
+        coder->last_active_time = time_current();
+        pthread_mutex_unlock(&coder->data->last_active_time);
+
         if (coder->compile_count >= coder->data->args.number_of_compiles_required)
         {
+           pthread_mutex_lock(&coder->data->check_finish);
             coder->finish = 1;
+           pthread_mutex_unlock(&coder->data->check_finish);
             return (NULL);
         }
 
@@ -110,13 +118,6 @@ void *thread_f(void *arg)
         if (get_stop(coder->data))
             return (NULL);
 
-        
-        pthread_mutex_lock(&coder->data->m_last_compile);
-        coder->last_compile_time = time_current();
-        pthread_mutex_unlock(&coder->data->m_last_compile);
-
-       
-       
         pthread_mutex_lock(&coder->data->print_lock);
         time_now = time_current();
         timestamp = time_now - coder->data->start_time;
@@ -125,29 +126,37 @@ void *thread_f(void *arg)
 
         // printf(" coder : %d priority: %lld , id = %d\n",coder->id ,task.priority, task.id);
        
+       
 
         smart_sleep(coder->data->args.time_to_compile,coder );
-        //usleep(coder->data->args.time_to_compile);
+
+         pthread_mutex_lock(&coder->data->m_last_compile);
+        coder->last_compile_time = time_current();
+        pthread_mutex_unlock(&coder->data->m_last_compile);
+
+     
         
        
         pthread_mutex_unlock(&coder->second->mutex);
         pthread_mutex_unlock(&coder->first->mutex);
 
-        //smart_sleep(coder->data->args.dongle_cooldown,coder);
-       //usleep(coder->data->args.dongle_cooldown);
-       if (!coder->first || !coder->second)
-            printf("BROKEN POINTER\n");
-        
-        pthread_mutex_lock(&coder->data->dongle_valid);
+
+      
+        pthread_mutex_lock(&coder->first->mutex);
         coder->first->is_valid = time_current() + coder->data->args.dongle_cooldown;
         coder->first->is_use = 0;
+        pthread_mutex_unlock(&coder->first->mutex);
+
+        pthread_mutex_lock(&coder->second->mutex);
         coder->second->is_valid = time_current() + coder->data->args.dongle_cooldown;
         coder->second->is_use = 0;
-        pthread_mutex_unlock(&coder->data->dongle_valid);
+        pthread_mutex_unlock(&coder->second->mutex);
 
         pthread_mutex_lock(&coder->data->heap->lock);
         extract_min(coder->data->heap);
         pthread_mutex_unlock(&coder->data->heap->lock);
+
+       
 
         if (coder->data->args.scheduler == fifo)
         {
@@ -170,11 +179,10 @@ void *thread_f(void *arg)
         pthread_mutex_unlock(&coder->data->print_lock);
 
         smart_sleep(coder->data->args.time_to_debug,coder);
-        //usleep(coder->data->args.time_to_debug);
+       
         if (get_stop(coder->data))
             return (NULL);
 
-        
         pthread_mutex_lock(&coder->data->print_lock);
         time_now = time_current();
         timestamp = time_now - coder->data->start_time;
@@ -182,12 +190,14 @@ void *thread_f(void *arg)
         pthread_mutex_unlock(&coder->data->print_lock);
 
         smart_sleep(coder->data->args.time_to_refactor,coder);
-        //usleep(coder->data->args.time_to_refactor);
+
         if (get_stop(coder->data))
             return (NULL);
+       
         pthread_mutex_lock(&coder->data->compile_count);
         coder->compile_count++;
         pthread_mutex_unlock(&coder->data->compile_count);
+        
     }
 
     return (NULL);
@@ -237,6 +247,10 @@ void create_coders(t_args *arg, t_coder *arr_coder){
    }
 }
 
+
+
+
+
 int lock_dongles(t_coder *coder)
 {
     long long timestamp;
@@ -278,39 +292,26 @@ int lock_dongles(t_coder *coder)
    
     while (!get_stop(coder->data))
     {
-         //pthread_mutex_lock(&coder->data->dongle_valid);
+        
+        pthread_mutex_lock(&coder->first->mutex);
+        pthread_mutex_lock(&coder->second->mutex);
+
         time_now = time_current();
+           
         if (time_now >= coder->first->is_valid  && time_now >= coder->second->is_valid && coder->first->is_use== 0 && coder->second->is_use== 0)
         {
            
-            pthread_mutex_lock(&coder->first->mutex);
-            
-            if (get_stop(coder->data))
-            {
-                pthread_mutex_unlock(&coder->first->mutex);
-               // pthread_mutex_unlock(&coder->data->dongle_valid);
-                return 0;
-            }
-            pthread_mutex_lock(&coder->second->mutex);
-            if (get_stop(coder->data))
-            {
-                pthread_mutex_unlock(&coder->first->mutex);
-                pthread_mutex_unlock(&coder->second->mutex);
-               // pthread_mutex_unlock(&coder->data->dongle_valid);
-                return 0;
-            }
+           
             coder->first->is_use= 1;
             coder->second->is_use= 1;
-           // pthread_mutex_unlock(&coder->data->dongle_valid);
-            break;
+           return 1;
             
         }
-
-            usleep(100);
+            pthread_mutex_unlock(&coder->first->mutex);
+            pthread_mutex_unlock(&coder->second->mutex);
+            usleep(1000);
         
     }
-    //  if (get_stop(coder->data))
-    //     return 0;
 
     return 1;
 }

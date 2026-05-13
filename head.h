@@ -94,6 +94,10 @@ typedef struct s_data
     pthread_mutex_t m_last_compile;
     pthread_mutex_t compile_count;
     pthread_mutex_t dongle_valid;
+
+    pthread_mutex_t last_active_time;
+
+    pthread_mutex_t check_finish;
 }t_data;
 
 
@@ -103,6 +107,7 @@ typedef struct s_data
     t_dongle *left_dongle;
     t_dongle *right_dongle;
     long last_compile_time;
+    long last_active_time;
     int compile_count;
     state_type state;
     t_data *data;

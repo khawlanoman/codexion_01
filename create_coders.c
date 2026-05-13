@@ -79,7 +79,6 @@ void *thread_f(void *arg)
         pthread_cond_broadcast(&coder->data->cond_check);
         pthread_mutex_unlock(&coder->data->heap->lock);
 
-
 // ////
         pthread_mutex_lock(&coder->data->heap->lock);
         while (!get_stop(coder->data) && coder->data->heap->size == 0 )
@@ -179,6 +178,10 @@ void *thread_f(void *arg)
         pthread_mutex_unlock(&coder->data->print_lock);
 
         smart_sleep(coder->data->args.time_to_debug,coder);
+         pthread_mutex_lock(&coder->data->m_last_compile);
+        coder->last_compile_time = time_current();
+        pthread_mutex_unlock(&coder->data->m_last_compile);
+
        
         if (get_stop(coder->data))
             return (NULL);
@@ -190,6 +193,10 @@ void *thread_f(void *arg)
         pthread_mutex_unlock(&coder->data->print_lock);
 
         smart_sleep(coder->data->args.time_to_refactor,coder);
+         pthread_mutex_lock(&coder->data->m_last_compile);
+        coder->last_compile_time = time_current();
+        pthread_mutex_unlock(&coder->data->m_last_compile);
+
 
         if (get_stop(coder->data))
             return (NULL);

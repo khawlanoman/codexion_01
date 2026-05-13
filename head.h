@@ -24,64 +24,56 @@
 #include <sys/time.h>
 
 
-typedef enum {
-    fifo,
-    edf
+typedef enum
+{
+	fifo,
+	edf
 } scheduler_type;
 
-typedef enum{
-    compile,
-    debug,
-    refactor
+typedef struct	coder t_coder;
 
-} state_type;
-
-typedef struct coder t_coder;
-
-typedef struct args {
-    int number_of_coders;
-    long time_to_burnout;
-    long time_to_compile;
-    long time_to_debug;
-    long time_to_refactor;
-    int number_of_compiles_required;
-    long dongle_cooldown;
-    scheduler_type scheduler;
+typedef struct	args
+{
+	int	number_of_coders;
+	long	time_to_burnout;
+	long	time_to_compile;
+	long	time_to_debug;
+	long	time_to_refactor;
+	int	number_of_compiles_required;
+	long	dongle_cooldown;
+	scheduler_type	scheduler;
 }t_args;
 
-
-typedef struct s_task
+typedef struct	s_task
 {
-    int id;
-    long long priority;
+	int	id;
+	long long	priority;
 } t_task;
 
-
-typedef struct s_heap
+typedef struct	s_heap
 {
-    t_task *arr;
-    int size;
-    int capacity;
-    pthread_mutex_t lock;
+	t_task	*arr;
+	int	size;
+	int	capacity;
+	pthread_mutex_t	lock;
 } t_heap;
 
-
-typedef struct dongle{
-    long long is_valid;
-    int is_use;
-    pthread_mutex_t mutex;
+typedef struct	dongle
+{
+	long long	is_valid;
+	int	is_use;
+	pthread_mutex_t	mutex;
 } t_dongle;
 
-
-typedef struct s_data
+typedef struct	s_data
 {
-    t_args args;
-    t_coder *coders;
-    t_dongle *dongles;
-    long start_time;
-    t_heap *heap;
-    int stop;
-    int fifo_order;
+	t_args	args;
+	t_coder	*coders;
+	t_dongle	*dongles;
+	long	start_time;
+	t_heap	*heap;
+	int	stop;
+	int	fifo_order;
 
     pthread_t controller_thread;
     int group;

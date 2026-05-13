@@ -12,114 +12,88 @@
 
 #include "head.h"
 
-t_heap *alocate_heap(int capacity)
+t_heap	*alocate_heap(int capacity)
 {
-    t_heap *heap;
+	t_heap	*heap;
 
-    heap = malloc(sizeof(t_heap));
-    if (!heap)
-        return NULL;
-
-    heap->arr = malloc(sizeof(t_task) * capacity);
-    if (!heap->arr)
-    {
-        free(heap);
-        return NULL;
-    }
-
-    heap->size = 0;
-    heap->capacity = capacity;
-
-    pthread_mutex_init(&heap->lock, NULL);
-
-    return heap;
+	heap = malloc(sizeof(t_heap));
+	if (!heap)
+		return (NULL);
+	heap->arr = malloc(sizeof(t_task) * capacity);
+	if (!heap->arr)
+	{
+		free(heap);
+		return (NULL);
+	}
+	heap->size = 0;
+	heap->capacity = capacity;
+	pthread_mutex_init(&heap->lock, NULL);
+	return (heap);
 }
 
-void swap_task(t_task *a, t_task *b){
-
-    t_task tmp;
-
-    tmp = *a;
-    *a  = *b;
-    *b = tmp;
-}
-
-
-void heap_check(t_heap *heap, int i){
-   int parent;
-
-   while (i > 0)
-   {
-        parent = (i -1) / 2;
-
-        if (heap->arr[i].priority < heap->arr[parent].priority)
-        {
-            swap_task(&heap->arr[i], &heap->arr[parent]);
-            i = parent;
-        }
-        else
-            break;
-   }
-   
-}
-
-void heap_task_down(t_heap *heap , int i){
-   int left_child;
-   int right_child;
-   int small;
-
-   while (1)
-   {
-        right_child = (2 * i) + 2;
-        left_child = (2 * i)+ 1;
-        small = i;
-        if ( left_child < heap-> size && heap->arr[left_child].priority < heap->arr[small].priority)
-                    small = left_child;
-
-        
-         if ( right_child < heap-> size && heap->arr[right_child].priority < heap->arr[small].priority)
-                small = right_child;
- 
-        if (small == i)
-        {
-            break;
-        }
-        swap_task(&heap->arr[i], &heap->arr[small]);
-        i = small;
-        
-   }
-   
-}
-
-
-void add_heap(t_heap *heap, t_task task){
-
-    if (heap->size >= heap->capacity)
-        return ;
-    
-    heap->arr[heap->size] = task;
-    heap_check(heap,heap->size);
-    heap->size++;
-    
-}
-
-
-t_task extract_min(t_heap *heap)
+void	heap_check(t_heap *heap, int i)
 {
-    t_task min_task;
+	int	parent;
 
-    if (heap->size == 0)
-    {
-        min_task.id = -1;
-        min_task.priority = -1;
-        return (min_task);
-    }
+	while (i > 0)
+	{
+		parent = (i -1) / 2;
+		if (heap->arr[i].priority < heap->arr[parent].priority)
+		{
+			swap_task(&heap->arr[i], &heap->arr[parent]);
+			i = parent;
+		}
+		else
+			break ;
+	}
+}
 
-    min_task = heap->arr[0];
-    heap->arr[0] = heap->arr[heap->size - 1];
-    heap->size--;
+void	heap_task_down(t_heap *heap, int i)
+{
+	int	left_child;
+	int	right_child;
+	int	small;
 
-    heap_task_down(heap, 0);
+	while (1)
+	{
+		right_child = (2 * i) + 2;
+		left_child = (2 * i) + 1;
+		small = i;
+		if ((left_child < heap-> size) && (
+				heap->arr[left_child].priority < heap->arr[small].priority))
+			small = left_child;
+		if ((right_child < heap-> size) && (
+				heap->arr[right_child].priority < heap->arr[small].priority))
+			small = right_child;
+		if (small == i)
+			break ;
+		swap_task(&heap->arr[i], &heap->arr[small]);
+		i = small;
+	}
+}
 
-    return (min_task);
+void	add_heap(t_heap *heap, t_task task)
+{
+	if (heap->size >= heap->capacity)
+		return ;
+	heap->arr[heap->size] = task;
+	heap_check(heap, heap->size);
+	heap->size++;
+}
+
+t_task	extract_min(t_heap *heap)
+{
+	t_task	min_task;
+
+	if (heap->size == 0)
+	{
+		min_task.id = -1;
+		min_task.priority = -1;
+		return (min_task);
+	}
+	min_task = heap->arr[0];
+	heap->arr[0] = heap->arr[heap->size - 1];
+	heap->size--;
+	heap_task_down(heap, 0);
+	return (min_task);
 }

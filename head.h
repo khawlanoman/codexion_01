@@ -101,7 +101,7 @@ typedef struct	s_data
     long last_compile_time;
     long last_active_time;
     int compile_count;
-    state_type state;
+    //state_type state;
     t_data *data;
     int finish ;
     int my_group;

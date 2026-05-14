@@ -224,7 +224,7 @@ t_coder *create_array_coders(t_data *data){
     while (i < number_coders)
     {
         arr_coders[i].id = i + 1;
-        arr_coders[i].state = 0;
+        //arr_coders[i].state = 0;
         arr_coders[i].finish = 0;
         arr_coders[i].left_dongle = NULL;
         arr_coders[i].right_dongle = NULL;

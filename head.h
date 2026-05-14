@@ -166,5 +166,5 @@ void check_first_and_second(t_coder *coder);
 void print_state(t_coder *coder, char *string);
 void f_compile_count(t_coder *coder);
 void f_last_compile_time(t_coder *coder);
-
+void f_dongle_valid(t_coder *coder);
 #endif

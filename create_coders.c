@@ -123,24 +123,12 @@ void *thread_f(void *arg)
         print_state(coder, "is compiling");
 
         smart_sleep(coder->data->args.time_to_compile,coder );
-
-         pthread_mutex_lock(&coder->data->m_last_compile);
-        coder->last_compile_time = time_current();
-        pthread_mutex_unlock(&coder->data->m_last_compile);
-
+        f_last_compile_time(coder);
        
         pthread_mutex_unlock(&coder->second->mutex);
         pthread_mutex_unlock(&coder->first->mutex);
 
-        pthread_mutex_lock(&coder->first->mutex);
-        coder->first->is_valid = time_current() + coder->data->args.dongle_cooldown;
-        coder->first->is_use = 0;
-        pthread_mutex_unlock(&coder->first->mutex);
-
-        pthread_mutex_lock(&coder->second->mutex);
-        coder->second->is_valid = time_current() + coder->data->args.dongle_cooldown;
-        coder->second->is_use = 0;
-        pthread_mutex_unlock(&coder->second->mutex);
+        f_dongle_valid(coder);
 
         pthread_mutex_lock(&coder->data->heap->lock);
         extract_min(coder->data->heap);
@@ -165,21 +153,13 @@ void *thread_f(void *arg)
         print_state(coder, "is debuging");
 
         smart_sleep(coder->data->args.time_to_debug,coder);
-        //f_last_compile_time(coder);
-        pthread_mutex_lock(&coder->data->m_last_compile);
-        coder->last_compile_time = time_current();
-        pthread_mutex_unlock(&coder->data->m_last_compile);
-
+        f_last_compile_time(coder);
        
         if (get_stop(coder->data))
             return (NULL);
         print_state(coder, "is refactoring");
         smart_sleep(coder->data->args.time_to_refactor,coder);
-    
-        pthread_mutex_lock(&coder->data->m_last_compile);
-        coder->last_compile_time = time_current();
-        pthread_mutex_unlock(&coder->data->m_last_compile);
-
+        f_last_compile_time(coder);
 
         if (get_stop(coder->data))
             return (NULL);

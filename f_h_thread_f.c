@@ -32,9 +32,22 @@ void print_state(t_coder *coder, char *string)
 //     pthread_mutex_unlock(&coder->data->compile_count);
 // }
 
-// void f_last_compile_time(t_coder *coder)
-// {
-//     pthread_mutex_lock(&coder->data->m_last_compile);
-//     coder->last_compile_time = time_current();
-//     pthread_mutex_lock(&coder->data->m_last_compile);
-// }
+void f_last_compile_time(t_coder *coder)
+{
+    pthread_mutex_lock(&coder->data->m_last_compile);
+    coder->last_compile_time = time_current();
+    pthread_mutex_unlock(&coder->data->m_last_compile);
+}
+
+void f_dongle_valid(t_coder *coder)
+{
+    pthread_mutex_lock(&coder->first->mutex);
+    coder->first->is_valid = time_current() + coder->data->args.dongle_cooldown;
+    coder->first->is_use = 0;
+    pthread_mutex_unlock(&coder->first->mutex);
+
+    pthread_mutex_lock(&coder->second->mutex);
+    coder->second->is_valid = time_current() + coder->data->args.dongle_cooldown;
+    coder->second->is_use = 0;
+    pthread_mutex_unlock(&coder->second->mutex);
+}

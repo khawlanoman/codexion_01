@@ -91,7 +91,6 @@ void *monitor_check(void *d){
                 set_stop(data);
                 return NULL;
             }
-    
      }
     return NULL;
 }

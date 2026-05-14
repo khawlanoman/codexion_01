@@ -51,3 +51,42 @@ void f_dongle_valid(t_coder *coder)
     coder->second->is_use = 0;
     pthread_mutex_unlock(&coder->second->mutex);
 }
+
+void fifo_groups(t_coder *coder)
+{
+    if (coder->data->args.scheduler == fifo)
+    {
+       pthread_mutex_lock(&coder->data->group_lock);
+       if (coder->id % 2 == 0)
+       {
+            coder->my_group = 1;
+            pthread_mutex_unlock(&coder->data->group_lock);
+       }
+       else{
+            coder->my_group = 0;
+            pthread_mutex_unlock(&coder->data->group_lock);
+       }
+       while (!get_stop(coder->data))
+       {
+            pthread_mutex_lock(&coder->data->group_lock);
+            if (coder->data->group == coder->my_group)
+            {
+                pthread_mutex_unlock(&coder->data->group_lock);
+                break;
+            }
+            pthread_mutex_unlock(&coder->data->group_lock); 
+       }
+    }
+}
+
+void f_priority(t_coder *coder, t_task task)
+{
+    pthread_mutex_lock(&coder->data->heap->lock);
+    if (coder->data->args.scheduler == fifo)
+        task.priority = coder->data->fifo_order++;
+    else if (coder->data->args.scheduler == edf)
+        task.priority = coder->last_compile_time + coder->data->args.time_to_burnout;
+    add_heap(coder->data->heap, task);
+    pthread_cond_broadcast(&coder->data->cond_check);
+    pthread_mutex_unlock(&coder->data->heap->lock);
+}

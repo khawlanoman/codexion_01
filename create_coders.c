@@ -18,12 +18,7 @@ void *thread_f(void *arg)
     //long long   time_now;
     //long long   timestamp;
 
-    coder = (t_coder *)arg;
-
-        // time_now = time_current();
-        // timestamp = time_now - coder->data->start_time;
-        // printf("[coder_id:%d, time:%lld]\n",coder->id,timestamp);
-   
+    coder = (t_coder *)arg;   
     while (!get_stop(coder->data))
     {
         pthread_mutex_lock(&coder->data->check_finish);
@@ -32,7 +27,6 @@ void *thread_f(void *arg)
             pthread_mutex_unlock(&coder->data->check_finish);
             break;
         }
-        
         pthread_mutex_unlock(&coder->data->check_finish);
 
         pthread_mutex_lock(&coder->data->last_active_time);
@@ -46,45 +40,11 @@ void *thread_f(void *arg)
            pthread_mutex_unlock(&coder->data->check_finish);
             return (NULL);
         }
-
-        if (coder->data->args.scheduler ==fifo)
-        {   pthread_mutex_lock(&coder->data->group_lock);
-             if (coder->id % 2 == 0)
-             {
-                coder->my_group = 1;
-                pthread_mutex_unlock(&coder->data->group_lock);
-             }
-            else{
-                coder->my_group = 0;
-                pthread_mutex_unlock(&coder->data->group_lock);
-            }
-
-            while (!get_stop(coder->data))
-            {
-                pthread_mutex_lock(&coder->data->group_lock);
-                if (coder->data->group == coder->my_group)
-                {
-                    
-                    pthread_mutex_unlock(&coder->data->group_lock);
-                    break;
-                }
-                pthread_mutex_unlock(&coder->data->group_lock);
-            }
-
-        }  
+ 
+        fifo_groups(coder);
         task.id = coder->id;
 
-        pthread_mutex_lock(&coder->data->heap->lock);
-
-        if (coder->data->args.scheduler == fifo)
-        //i need mutex here
-            task.priority = coder->data->fifo_order++;
-        if (coder->data->args.scheduler == edf){
-            task.priority = coder->last_compile_time + coder->data->args.time_to_burnout; 
-        }
-        add_heap(coder->data->heap, task);
-        pthread_cond_broadcast(&coder->data->cond_check);
-        pthread_mutex_unlock(&coder->data->heap->lock);
+        f_priority(coder,task);
 
 // ////
         pthread_mutex_lock(&coder->data->heap->lock);
@@ -99,10 +59,8 @@ void *thread_f(void *arg)
         }
         pthread_mutex_unlock(&coder->data->heap->lock);
 /////
-
         if (lock_dongles(coder) == 0)
             return (NULL);
-
 
         if (get_stop(coder->data))
         {
@@ -111,15 +69,12 @@ void *thread_f(void *arg)
             return (NULL);
         }
 
-
         print_state(coder, "has taken a dongle");
         print_state(coder, "has taken a dongle");
 
         if (get_stop(coder->data))
             return (NULL);
 
-       
-       
         print_state(coder, "is compiling");
 
         smart_sleep(coder->data->args.time_to_compile,coder );
@@ -147,9 +102,6 @@ void *thread_f(void *arg)
         if (get_stop(coder->data))
             return (NULL);
 
-        
-     
-     
         print_state(coder, "is debuging");
 
         smart_sleep(coder->data->args.time_to_debug,coder);

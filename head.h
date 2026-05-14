@@ -110,14 +110,6 @@ typedef struct	s_data
 } t_coder;
 
 
-// typedef struct s_queue{
-//     int *arr;
-//     int next;
-
-//     int 
-// }
-
-
 char *check_args(t_args *arg);
 char *valid_args(char **argv, int argc);
 
@@ -130,7 +122,6 @@ t_dongle *create_array_dongles(t_data *data);
 void add_dongles_to_coders(t_data *data, t_coder *coder, t_dongle *dongles);
 
 void init_dongles(t_dongle *dongles, t_data *data);
-
 
 void set_stop(t_data *data);
 
@@ -167,4 +158,6 @@ void print_state(t_coder *coder, char *string);
 void f_compile_count(t_coder *coder);
 void f_last_compile_time(t_coder *coder);
 void f_dongle_valid(t_coder *coder);
+void fifo_groups(t_coder *coder);
+void f_priority(t_coder *coder, t_task task);
 #endif

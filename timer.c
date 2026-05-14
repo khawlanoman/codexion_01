@@ -55,7 +55,7 @@ void *monitor_check(void *d){
      {
         i = 0;
         //printf("monitor checking...\n");
-        usleep(10000);
+        
         while (i < number_coder)
         {
             pthread_mutex_lock(&data->check_finish);
@@ -82,6 +82,7 @@ void *monitor_check(void *d){
                 pthread_mutex_unlock(&data->print_lock);
                 return NULL;
             }
+            usleep(10000);
             i++;
         }
 

@@ -39,7 +39,7 @@ typedef struct	args
 	long	time_to_compile;
 	long	time_to_debug;
 	long	time_to_refactor;
-	int	number_of_compiles_required;
+	int number_of_compiles_required;
 	long	dongle_cooldown;
 	scheduler_type	scheduler;
 }t_args;

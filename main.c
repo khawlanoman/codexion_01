@@ -129,8 +129,9 @@ int main(int argc, char **argv){
 
     }
     
-    pthread_join(data.controller_thread,NULL);
     pthread_join(m_check,NULL);
+    if (data.args.scheduler == fifo)
+        pthread_join(data.controller_thread,NULL);
 
   
     int k = 0;

@@ -85,7 +85,7 @@ typedef struct	s_data
     pthread_mutex_t m_stop;
     pthread_mutex_t m_last_compile;
     pthread_mutex_t compile_count;
-    pthread_mutex_t dongle_valid;
+    //pthread_mutex_t dongle_valid;
 
     pthread_mutex_t last_active_time;
 
@@ -157,7 +157,14 @@ void heap_check(t_heap *heap, int i);
 void heap_task_down(t_heap *heap , int i);
 t_task extract_min(t_heap *heap);
 
-
-
 void *controller(void *arg);
+
+
+///helper function 
+int for_one_dongle(t_coder *coder);
+void check_first_and_second(t_coder *coder);
+void print_state(t_coder *coder, char *string);
+void f_compile_count(t_coder *coder);
+void f_last_compile_time(t_coder *coder);
+
 #endif

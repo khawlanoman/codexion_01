@@ -67,7 +67,7 @@ int main(int argc, char **argv){
     pthread_mutex_init(&data.m_stop,NULL);
     pthread_mutex_init(&data.m_last_compile,NULL);
     pthread_mutex_init(&data.compile_count,NULL);
-    pthread_mutex_init(&data.dongle_valid,NULL);
+   // pthread_mutex_init(&data.dongle_valid,NULL);
     pthread_mutex_init(&data.last_active_time,NULL);
     pthread_mutex_init(&data.check_finish,NULL);
 
@@ -137,7 +137,7 @@ int main(int argc, char **argv){
     pthread_mutex_destroy(&data.m_last_compile);
     pthread_cond_destroy(&data.cond_check);
     pthread_mutex_destroy(&data.compile_count);
-    pthread_mutex_destroy(&data.dongle_valid);
+   // pthread_mutex_destroy(&data.dongle_valid);
     pthread_mutex_destroy(&data.last_active_time);
     pthread_mutex_destroy(&data.check_finish);
 

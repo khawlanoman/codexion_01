@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_dongels.c                                   :+:      :+:    :+:   */
+/*   create_dongles.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: khnoman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 14:37:16 by khnoman           #+#    #+#             */
-/*   Updated: 2026/04/17 14:37:18 by khnoman          ###   ########.fr       */
+/*   Updated: 2026/05/14 14:58:42 by khnoman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "head.h"
@@ -24,7 +24,6 @@ t_dongle	*create_array_dongles(t_data *data)
 		return (NULL);
 	return (arr_dongles);
 }
-
 
 void	init_dongles(t_dongle *dongles, t_data *data)
 {

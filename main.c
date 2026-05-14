@@ -68,16 +68,11 @@ int main(int argc, char **argv){
     pthread_mutex_init(&data.m_last_compile,NULL);
     pthread_mutex_init(&data.compile_count,NULL);
     pthread_mutex_init(&data.dongle_valid,NULL);
-
-
     pthread_mutex_init(&data.last_active_time,NULL);
-
     pthread_mutex_init(&data.check_finish,NULL);
 
     data.stop = 0;
-
     data.heap = alocate_heap(data.args.number_of_coders);
-    
     data.coders = create_array_coders(&data);
     data.group = 0;
 
@@ -109,16 +104,8 @@ int main(int argc, char **argv){
 
     init_dongles(data.dongles,&data);
     add_dongles_to_coders(&data,data.coders,data.dongles);
-
-    
-
     create_coders(&data.args, data.coders);
-    
-
-
     pthread_t m_check;
-    
-    
     pthread_create(&m_check,NULL,monitor_check, &data);
 
     int i = 0;
@@ -131,7 +118,7 @@ int main(int argc, char **argv){
     
     if (data.args.scheduler == fifo)
         pthread_join(data.controller_thread,NULL);
-        
+
     pthread_join(m_check,NULL);
 
   

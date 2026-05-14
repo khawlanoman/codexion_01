@@ -146,7 +146,12 @@ int main(int argc, char **argv){
     pthread_mutex_destroy(&data.print_lock);
     pthread_mutex_destroy(&data.m_stop);
     pthread_mutex_destroy(&data.m_last_compile);
-    
+    pthread_cond_destroy(&data.cond_check);
+    pthread_mutex_destroy(&data.compile_count);
+    pthread_mutex_destroy(&data.dongle_valid);
+    pthread_mutex_destroy(&data.last_active_time);
+    pthread_mutex_destroy(&data.check_finish);
+
     free(data.dongles);
     free(data.coders);
     

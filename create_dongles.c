@@ -25,6 +25,7 @@ t_dongle	*create_array_dongles(t_data *data)
 	return (arr_dongles);
 }
 
+
 void	init_dongles(t_dongle *dongles, t_data *data)
 {
 	int	number_dongles;

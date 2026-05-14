@@ -23,9 +23,16 @@ void *thread_f(void *arg)
         // time_now = time_current();
         // timestamp = time_now - coder->data->start_time;
         // printf("[coder_id:%d, time:%lld]\n",coder->id,timestamp);
-    pthread_mutex_lock(&coder->data->check_finish);
-    while (!get_stop(coder->data) && !coder->finish)
+   
+    while (!get_stop(coder->data))
     {
+        pthread_mutex_lock(&coder->data->check_finish);
+        if (coder->finish == 1)
+        {
+            pthread_mutex_unlock(&coder->data->check_finish);
+            break;
+        }
+        
         pthread_mutex_unlock(&coder->data->check_finish);
 
         pthread_mutex_lock(&coder->data->last_active_time);
@@ -207,6 +214,7 @@ void *thread_f(void *arg)
         
     }
 
+    //pthread_mutex_lock(&coder->data->check_finish);
     return (NULL);
 }
 

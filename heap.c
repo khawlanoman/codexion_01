@@ -81,7 +81,7 @@ void	add_heap(t_heap *heap, t_task task)
 	heap->size++;
 }
 
-t_task	extract_min(t_heap *heap)
+t_task	remove_min(t_heap *heap)
 {
 	t_task	min_task;
 

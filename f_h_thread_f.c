@@ -25,12 +25,6 @@ void print_state(t_coder *coder, char *string)
     pthread_mutex_unlock(&coder->data->print_lock);
 }
 
-// void f_compile_count(t_coder *coder)
-// {
-//     pthread_mutex_lock(&coder->data->compile_count);
-//     coder->compile_count++;
-//     pthread_mutex_unlock(&coder->data->compile_count);
-// }
 
 void f_last_compile_time(t_coder *coder)
 {

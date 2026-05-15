@@ -146,7 +146,7 @@ void swap_task(t_task *a, t_task *b);
 void heap_check(t_heap *heap, int i);
 
 void heap_task_down(t_heap *heap , int i);
-t_task extract_min(t_heap *heap);
+t_task remove_min(t_heap *heap);
 
 void *controller(void *arg);
 
@@ -160,4 +160,11 @@ void f_last_compile_time(t_coder *coder);
 void f_dongle_valid(t_coder *coder);
 void fifo_groups(t_coder *coder);
 void f_priority(t_coder *coder, t_task task);
+void fifo_group(t_coder *coder);
+void debug_and_refactor(t_coder *coder);
+int print_and_check_dongles(t_coder *coder);
+int  heap_check_wait(t_coder *coder);
+int check_finish(t_coder *coder);
+void compile_and_unlock_remove_min(t_coder *coder);
+int coder_cycle(t_coder *coder);
 #endif

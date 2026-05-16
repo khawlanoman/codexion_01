@@ -84,3 +84,14 @@ void f_priority(t_coder *coder, t_task task)
     pthread_cond_broadcast(&coder->data->cond_check);
     pthread_mutex_unlock(&coder->data->heap->lock);
 }
+int check_compile_count(t_coder *coder)
+{
+    if (coder->compile_count >= coder->data->args.number_of_compiles_required)
+    {
+       pthread_mutex_lock(&coder->data->check_finish);
+       coder->finish = 1;
+       pthread_mutex_unlock(&coder->data->check_finish);
+       return 0;
+    }
+    return 1;
+}

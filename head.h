@@ -167,4 +167,14 @@ int  heap_check_wait(t_coder *coder);
 int check_finish(t_coder *coder);
 void compile_and_unlock_remove_min(t_coder *coder);
 int coder_cycle(t_coder *coder);
+void check_last_active(t_coder *coder);
+int check_compile_count(t_coder *coder);
+
+
+
+int check_finish_monitor(t_data *data, int *i);
+long long read_last_active(t_data *data, int *i);
+void update_group(t_data *data);
+void f_bunout(t_data *data, int *i, long long now);
+int check_coder_in_monitor(t_data *data);
 #endif

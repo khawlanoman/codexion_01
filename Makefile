@@ -1,7 +1,7 @@
 NAME = codexion
 
 RM = rm -f
-CC = CC
+CC = cc
 CFLAGS = -Wall -Wextra -Werror -fsanitize=thread
 
 SRC = create_coders.c \
@@ -12,7 +12,9 @@ SRC = create_coders.c \
 	  heap.c \
 	  main.c \
 	  parsing.c \
-	  timer.c 
+	  timer.c \
+	  timer_helper1.c \
+	  timer_helper2.c
 
 OBJ = $(SRC:.c=.o)
 

@@ -14,7 +14,8 @@ SRC = create_coders.c \
 	  parsing.c \
 	  timer.c \
 	  timer_helper1.c \
-	  timer_helper2.c
+	  timer_helper2.c \
+	  main_helper.c
 
 OBJ = $(SRC:.c=.o)
 

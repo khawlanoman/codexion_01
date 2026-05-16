@@ -177,4 +177,9 @@ long long read_last_active(t_data *data, int *i);
 void update_group(t_data *data);
 void f_bunout(t_data *data, int *i, long long now);
 int check_coder_in_monitor(t_data *data);
+
+void  data_init(t_data *data, t_args arg);
+void f_destroy_and_free(t_data *data, t_args arg);
+void f_join(t_data *data,t_args arg, pthread_t m_check);
+int add_args(t_args *arg, char **argv);
 #endif

@@ -13,16 +13,13 @@
 #ifndef HEAD_H
 #define HEAD_H
 
-
 #include <time.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
 #include <sys/time.h>
-
 
 typedef enum
 {
@@ -85,10 +82,7 @@ typedef struct	s_data
     pthread_mutex_t m_stop;
     pthread_mutex_t m_last_compile;
     pthread_mutex_t compile_count;
-    //pthread_mutex_t dongle_valid;
-
     pthread_mutex_t last_active_time;
-
     pthread_mutex_t check_finish;
 }t_data;
 
@@ -101,7 +95,6 @@ typedef struct	s_data
     long last_compile_time;
     long last_active_time;
     int compile_count;
-    //state_type state;
     t_data *data;
     int finish ;
     int my_group;
@@ -112,34 +105,18 @@ typedef struct	s_data
 
 char *check_args(t_args *arg);
 char *valid_args(char **argv, int argc);
-
 void create_coders(t_args *arg, t_coder *arr_coder);
-
 t_coder *create_array_coders(t_data *data);
-
 t_dongle *create_array_dongles(t_data *data);
-
 void add_dongles_to_coders(t_data *data, t_coder *coder, t_dongle *dongles);
-
 void init_dongles(t_dongle *dongles, t_data *data);
-
 void set_stop(t_data *data);
-
 int get_stop(t_data *data);
-
 long long time_current(void);
-
 void *monitor_check(void *data);
-
-
 int check_coders(t_data *data);
-
 int lock_dongles(t_coder *coder);
-
-
 void smart_sleep(long var,t_coder *coder);
-
-
 t_heap *alocate_heap(int capacity);
 void add_heap(t_heap *heap, t_task task);
 void swap_task(t_task *a, t_task *b);

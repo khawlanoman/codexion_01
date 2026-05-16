@@ -159,4 +159,6 @@ void  data_init(t_data *data, t_args arg);
 void f_destroy_and_free(t_data *data, t_args arg);
 void f_join(t_data *data,t_args arg, pthread_t m_check);
 int add_args(t_args *arg, char **argv);
+
+void call_functions(t_data *data);
 #endif

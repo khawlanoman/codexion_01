@@ -100,3 +100,11 @@ void f_destroy_and_free(t_data *data, t_args arg)
 }
 
 
+void call_functions(t_data *data)
+{
+
+    init_dongles(data->dongles,data);
+    add_dongles_to_coders(data,data->coders,data->dongles);
+    create_coders(&data->args, data->coders);
+
+}

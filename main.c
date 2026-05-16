@@ -33,24 +33,18 @@ int main(int argc, char **argv)
     if (add_args(&arg, argv) == 1)
         return 1;
     data_init(&data, arg);
-
     if (data.args.scheduler == fifo)
         pthread_create(&data.controller_thread, NULL, controller, &data);
-
     data.coders->last_compile_time = data.start_time;
     data.dongles = create_array_dongles(&data);
-    if (!data.coders || !data.dongles){
+    if (!data.coders || !data.dongles)
         return 1;
-    }
-
-    init_dongles(data.dongles,&data);
-    add_dongles_to_coders(&data,data.coders,data.dongles);
-    create_coders(&data.args, data.coders);
+    // 
+    call_functions(&data);
     pthread_t m_check;
     pthread_create(&m_check,NULL,monitor_check, &data);
 
     f_join(&data, arg, m_check);
-
     f_destroy_and_free(&data, arg);
     return 0;
 }

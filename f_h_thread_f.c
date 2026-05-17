@@ -6,92 +6,80 @@
 /*   By: khnoman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 15:44:18 by khnoman           #+#    #+#             */
-/*   Updated: 2026/05/14 15:44:21 by khnoman          ###   ########.fr       */
+/*   Updated: 2026/05/17 11:10:34 by khnoman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "head.h"
 
-
-
-void print_state(t_coder *coder, char *string)
+void	print_state(t_coder *coder, char *string)
 {
-    long long timestamp;
-    long long time_now;
+	long long	timestamp;
+	long long	time_now;
 
-    time_now = time_current();
-    pthread_mutex_lock(&coder->data->print_lock);
-    timestamp = time_now - coder->data->start_time;
-    printf("%lld %d %s\n",timestamp,coder->id,string);
-    pthread_mutex_unlock(&coder->data->print_lock);
+	time_now = time_current();
+	pthread_mutex_lock(&coder->data->print_lock);
+	timestamp = time_now - coder->data->start_time;
+	printf("%lld %d %s\n", timestamp, coder->id, string);
+	pthread_mutex_unlock(&coder->data->print_lock);
 }
 
-
-void f_last_compile_time(t_coder *coder)
+void	f_last_compile_time(t_coder *coder)
 {
-    pthread_mutex_lock(&coder->data->m_last_compile);
-    coder->last_compile_time = time_current();
-    pthread_mutex_unlock(&coder->data->m_last_compile);
+	pthread_mutex_lock(&coder->data->m_last_compile);
+	coder->last_compile_time = time_current();
+	pthread_mutex_unlock(&coder->data->m_last_compile);
 }
 
-void f_dongle_valid(t_coder *coder)
+void	f_dongle_valid(t_coder *coder)
 {
-    pthread_mutex_lock(&coder->first->mutex);
-    coder->first->is_valid = time_current() + coder->data->args.dongle_cooldown;
-    coder->first->is_use = 0;
-    pthread_mutex_unlock(&coder->first->mutex);
-
-    pthread_mutex_lock(&coder->second->mutex);
-    coder->second->is_valid = time_current() + coder->data->args.dongle_cooldown;
-    coder->second->is_use = 0;
-    pthread_mutex_unlock(&coder->second->mutex);
+	pthread_mutex_lock(&coder->first->mutex);
+	coder->first->is_valid = time_current() + coder->data->args.dongle_cooldown;
+	coder->first->is_use = 0;
+	pthread_mutex_unlock(&coder->first->mutex);
+	pthread_mutex_lock(&coder->second->mutex);
+	coder->second->is_valid = time_current()
+		+ coder->data->args.dongle_cooldown;
+	coder->second->is_use = 0;
+	pthread_mutex_unlock(&coder->second->mutex);
 }
 
-void fifo_groups(t_coder *coder)
+void	fifo_groups(t_coder *coder)
 {
-    if (coder->data->args.scheduler == fifo)
-    {
-       pthread_mutex_lock(&coder->data->group_lock);
-       if (coder->id % 2 == 0)
-       {
-            coder->my_group = 1;
-            pthread_mutex_unlock(&coder->data->group_lock);
-       }
-       else{
-            coder->my_group = 0;
-            pthread_mutex_unlock(&coder->data->group_lock);
-       }
-       while (!get_stop(coder->data))
-       {
-            pthread_mutex_lock(&coder->data->group_lock);
-            if (coder->data->group == coder->my_group)
-            {
-                pthread_mutex_unlock(&coder->data->group_lock);
-                break;
-            }
-            pthread_mutex_unlock(&coder->data->group_lock); 
-       }
-    }
+	if (coder->data->args.scheduler == fifo)
+	{
+		pthread_mutex_lock(&coder->data->group_lock);
+		if (coder->id % 2 == 0)
+		{
+			coder->my_group = 1;
+			pthread_mutex_unlock(&coder->data->group_lock);
+		}
+		else
+		{
+			coder->my_group = 0;
+			pthread_mutex_unlock(&coder->data->group_lock);
+		}
+		while (!get_stop(coder->data))
+		{
+			pthread_mutex_lock(&coder->data->group_lock);
+			if (coder->data->group == coder->my_group)
+			{
+				pthread_mutex_unlock(&coder->data->group_lock);
+				break ;
+			}
+			pthread_mutex_unlock(&coder->data->group_lock);
+		}
+	}
 }
 
-void f_priority(t_coder *coder, t_task task)
+void	f_priority(t_coder *coder, t_task task)
 {
-    pthread_mutex_lock(&coder->data->heap->lock);
-    if (coder->data->args.scheduler == fifo)
-        task.priority = coder->data->fifo_order++;
-    else if (coder->data->args.scheduler == edf)
-        task.priority = coder->last_compile_time + coder->data->args.time_to_burnout;
-    add_heap(coder->data->heap, task);
-    pthread_cond_broadcast(&coder->data->cond_check);
-    pthread_mutex_unlock(&coder->data->heap->lock);
-}
-int check_compile_count(t_coder *coder)
-{
-    if (coder->compile_count >= coder->data->args.number_of_compiles_required)
-    {
-       pthread_mutex_lock(&coder->data->check_finish);
-       coder->finish = 1;
-       pthread_mutex_unlock(&coder->data->check_finish);
-       return 0;
-    }
-    return 1;
+	pthread_mutex_lock(&coder->data->heap->lock);
+	if (coder->data->args.scheduler == fifo)
+		task.priority = coder->data->fifo_order++;
+	else if (coder->data->args.scheduler == edf)
+		task.priority = coder->last_compile_time
+			+ coder->data->args.time_to_burnout;
+	add_heap(coder->data->heap, task);
+	pthread_cond_broadcast(&coder->data->cond_check);
+	pthread_mutex_unlock(&coder->data->heap->lock);
 }

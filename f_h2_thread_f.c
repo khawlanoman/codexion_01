@@ -6,7 +6,7 @@
 /*   By: khnoman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 18:04:38 by khnoman           #+#    #+#             */
-/*   Updated: 2026/05/16 16:24:19 by khnoman          ###   ########.fr       */
+/*   Updated: 2026/05/17 11:01:56 by khnoman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "head.h"
@@ -29,24 +29,24 @@ void	debug_and_refactor(t_coder *coder)
 	if (get_stop(coder->data))
 		return ;
 	print_state(coder, "is debuging");
-	smart_sleep(coder->data->args.time_to_debug,coder);
+	smart_sleep(coder->data->args.time_to_debug, coder);
 	f_last_compile_time(coder);
 	if (get_stop(coder->data))
-		return;
+		return ;
 	print_state(coder, "is refactoring");
-	smart_sleep(coder->data->args.time_to_refactor,coder);
+	smart_sleep(coder->data->args.time_to_refactor, coder);
 	f_last_compile_time(coder);
 }
 
-int print_and_check_dongles(t_coder *coder)
+int	print_and_check_dongles(t_coder *coder)
 {
 	if (lock_dongles(coder) == 0)
-		return 0; 
+		return (0);
 	if (get_stop(coder->data))
-		return 0;
+		return (0);
 	print_state(coder, "has taken a dongle");
 	print_state(coder, "has taken a dongle");
-	return 1;   
+	return (1);
 }
 
 int	heap_check_wait(t_coder *coder)
@@ -54,15 +54,15 @@ int	heap_check_wait(t_coder *coder)
 	pthread_mutex_lock(&coder->data->heap->lock);
 	while (!get_stop(coder->data) && coder->data->heap->size == 0)
 	{
-		pthread_cond_wait(&coder->data->cond_check,&coder->data->heap->lock);
+		pthread_cond_wait(&coder->data->cond_check, &coder->data->heap->lock);
 	}
 	if (get_stop(coder->data))
 	{
 		pthread_mutex_unlock(&coder->data->heap->lock);
-		return 0;
+		return (0);
 	}
 	pthread_mutex_unlock(&coder->data->heap->lock);
-	return 1;
+	return (1);
 }
 
 int	check_finish(t_coder *coder)
@@ -71,8 +71,8 @@ int	check_finish(t_coder *coder)
 	if (coder->finish == 1)
 	{
 		pthread_mutex_unlock(&coder->data->check_finish);
-		return 0;
+		return (0);
 	}
 	pthread_mutex_unlock(&coder->data->check_finish);
-	return 1;
+	return (1);
 }

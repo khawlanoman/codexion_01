@@ -4,18 +4,18 @@ RM = rm -f
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRC = create_coders.c \
-	  create_dongles.c \
-	  f_h_lock_dongles.c \
-	  f_h_thread_f.c \
-	  f_h2_thread_f.c \
-	  heap.c \
-	  main.c \
-	  parsing.c \
-	  timer.c \
-	  timer_helper1.c \
-	  timer_helper2.c \
-	  main_helper.c
+SRC = codexion_src/create_coders.c \
+	  codexion_src/create_dongles.c \
+	  codexion_src/f_h_lock_dongles.c \
+	  codexion_src/f_h_thread_f.c \
+	  codexion_src/f_h2_thread_f.c \
+	  codexion_src/heap.c \
+	  codexion_src/main.c \
+	  codexion_src/parsing.c \
+	  codexion_src/timer.c \
+	  codexion_src/timer_helper1.c \
+	  codexion_src/timer_helper2.c \
+	  codexion_src/main_helper.c
 
 OBJ = $(SRC:.c=.o)
 

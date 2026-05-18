@@ -131,13 +131,28 @@ The scheduler decides which coder works and when.
 <h2 style="font-size: 27px;" id="Project_Structure">📁 Project Structure </h2>
 
 <pre style="font-family: 'Courier New', monospace; background: #7c817875; padding: 20px; border-radius: 5px;">
-
-///
+codexion/
+├── codexion_code
+|   ├── create_coders.c
+|   ├── create_dongles.c
+|   ├── f_h_lock_dongles.c
+|   ├── f_h_thread_f.c
+|   ├── f_h2_thread_f.c
+|   ├── head.h
+|   ├── heap.c
+|   ├── main_helper.c
+|   ├── main.c
+|   ├── parsing.c
+|   ├── timer_helper1.c
+|   ├── timer_helper2.c
+|   └──timer.c
+├── Makefile
+└── README.md
 </pre>
 <h2  style="font-size: 27px;" id="Resources"> 📚 Resources </h2>
 <h4 style="font-size: 20px;"> Useful Links:</h4>
 <ul>
-<li> <a href="https://42-cursus.gitbook.io/guide/2-rank-02/push_swap"> Push_swap Tutorial (42 Docs)</a> </li>
+<li> <a href="https://www.geeksforgeeks.org/dsa/introduction-to-min-heap-data-structure/"> Push_swap Tutorial (42 Docs)</a> </li>
 <li> <a href="https://www.geeksforgeeks.org/dsa/stack-data-structure/"> Stack Data Structure</a></li>
 <li><a href="https://www.youtube.com/watch?v=wRvipSG4Mmk&themeRefresh=1">push_swap tutorial video<a/></li>
 </ul

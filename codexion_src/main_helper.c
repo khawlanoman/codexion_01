@@ -6,7 +6,7 @@
 /*   By: khnoman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 17:39:25 by khnoman           #+#    #+#             */
-/*   Updated: 2026/05/17 11:24:07 by khnoman          ###   ########.fr       */
+/*   Updated: 2026/05/19 11:46:20 by khnoman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "head.h"
@@ -48,9 +48,9 @@ void	data_init(t_data *data, t_args arg)
 	data->start_time = time_current();
 	data->stop = 0;
 	data->fifo_order = 0;
-    data->group = 0;
-    data->group_count_one = 0;
-    data->group_count_two = 0;
+	data->group = 0;
+	data->group_count_one = 0;
+	data->group_count_two = 0;
 	pthread_mutex_init(&data->group_lock, NULL);
 	pthread_cond_init(&data->cond_check, NULL);
 	pthread_mutex_init(&data->print_lock, NULL);
@@ -61,7 +61,6 @@ void	data_init(t_data *data, t_args arg)
 	pthread_mutex_init(&data->check_finish, NULL);
 	data->heap = alocate_heap(data->args.number_of_coders);
 	data->coders = create_array_coders(data);
-	
 }
 
 void	f_join(t_data *data, t_args arg, pthread_t m_check)

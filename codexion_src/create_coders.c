@@ -6,7 +6,7 @@
 /*   By: khnoman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 12:09:33 by khnoman           #+#    #+#             */
-/*   Updated: 2026/05/16 16:06:28 by khnoman          ###   ########.fr       */
+/*   Updated: 2026/05/19 11:44:49 by khnoman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "head.h"
@@ -53,7 +53,7 @@ t_coder	*create_array_coders(t_data *data)
 		arr_coders[i].right_dongle = NULL;
 		arr_coders[i].compile_count = 0;
 		arr_coders[i].last_compile_time = data->start_time;
-		arr_coders[i].last_active_time  = data->start_time;
+		arr_coders[i].last_active_time = data->start_time;
 		arr_coders[i].data = data;
 		i++;
 	}

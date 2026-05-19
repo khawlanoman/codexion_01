@@ -1,7 +1,6 @@
 <h3 style="color:gray">This project has been created as part the 42  by <span style="color:#28C775"> khnoman </span></h3> 
 <h1 style="font-size: 30px; color: rgba(255, 255, 128, 0.5);">🧵⚙️💻 CODEXION</h1>
 
-
 <br/>
 <h2  style="font-size: 27px;">📋 Table of Contents</h2>
 <ul>
@@ -153,6 +152,10 @@ codexion/
 <h4 style="font-size: 20px;"> Useful Links:</h4>
 <ul>
 <li> <a href="https://www.geeksforgeeks.org/dsa/introduction-to-min-heap-data-structure/"> Push_swap Tutorial (42 Docs)</a> </li>
-<li> <a href="https://www.geeksforgeeks.org/dsa/stack-data-structure/"> Stack Data Structure</a></li>
-<li><a href="https://www.youtube.com/watch?v=wRvipSG4Mmk&themeRefresh=1">push_swap tutorial video<a/></li>
-</ul
+<li> <a href="https://www.geeksforgeeks.org/operating-systems/thread-in-operating-system/"> thread in operating system</a></li>
+<li><a href="https://eng.libretexts.org/Courses/Delta_College/Operating_System:_The_Basics/04:_Threads/4.2:_Thread_Types">thread types<a/></li>
+<li><a href="https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/#using-posix-threads">thread types<a/>threads</li>
+<li><a href="https://www.youtube.com/watch?v=M9HHWFp84f0">video threads<a/></li>
+<li><a href="https://www.youtube.com/watch?v=O2tV9q6784k&t=710s">video threads<a/></li>
+<li><a href="https://www.tldraw.com/f/Fz6hc3-hn_mhDGBgKt_6-?d=v-3828.1861.19881.23146.page"> my project notes :)</li>
+</ul>

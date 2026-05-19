@@ -37,7 +37,7 @@ void	heap_check(t_heap *heap, int i)
 
 	while (i > 0)
 	{
-		parent = (i -1) / 2;
+		parent = (i - 1) / 2;
 		if (heap->arr[i].priority < heap->arr[parent].priority)
 		{
 			swap_task(&heap->arr[i], &heap->arr[parent]);

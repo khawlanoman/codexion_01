@@ -148,14 +148,113 @@ codexion/
 ├── Makefile
 └── README.md
 </pre>
+<div>
 <h2  style="font-size: 27px;" id="Resources"> 📚 Resources </h2>
 <h4 style="font-size: 20px;"> Useful Links:</h4>
 <ul>
-<li> <a href="https://www.geeksforgeeks.org/dsa/introduction-to-min-heap-data-structure/"> Push_swap Tutorial (42 Docs)</a> </li>
+<li> <a href="https://www.geeksforgeeks.org/dsa/introduction-to-min-heap-data-structure/"> introduction to min heap data structure</a> </li>
 <li> <a href="https://www.geeksforgeeks.org/operating-systems/thread-in-operating-system/"> thread in operating system</a></li>
 <li><a href="https://eng.libretexts.org/Courses/Delta_College/Operating_System:_The_Basics/04:_Threads/4.2:_Thread_Types">thread types<a/></li>
 <li><a href="https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/#using-posix-threads">thread types<a/>threads</li>
 <li><a href="https://www.youtube.com/watch?v=M9HHWFp84f0">video threads<a/></li>
 <li><a href="https://www.youtube.com/watch?v=O2tV9q6784k&t=710s">video threads<a/></li>
-<li><a href="https://www.tldraw.com/f/Fz6hc3-hn_mhDGBgKt_6-?d=v-3828.1861.19881.23146.page"> my project notes :)</li>
+<li><a href="https://www.tldraw.com/f/Fz6hc3-hn_mhDGBgKt_6-?d=v-3828.1861.19881.23146.page"> my project notes </a></li>
 </ul>
+</div>
+
+<h3 style="font-size: 27px;" id="blocking_cases_handled">Blocking Cases Handled in This Project </h3>
+
+<div>
+<h5>Deadlock Prevention</h5>
+<span style="color:red">Definition:</span> Prevents coders from waiting forever for dongles.</br>
+<p>
+Steps:<br>
+1. A coder requests dongles.<br>
+2. Dongles are acquired using a safe strategy.<br>
+3. Circular waiting is avoided.<br>
+4. The simulation continues without deadlock.<br>
+
+</p>
+</div>
+
+<div>
+<h5>Starvation Prevention</h5>
+<span style="color:red">Definition:</span> Ensures every coder eventually gets a chance to compile.
+</br>
+<p>
+Steps:<br>
+1. Runnable coders are added to the scheduler.<br>
+2. The scheduler selects the next coder using FIFO or EDF.<br>
+3. Selected coders compile and release resources.<br>
+4. Waiting coders eventually get scheduled.<br>
+</p>
+</div>
+
+
+<div>
+<h5>Cooldown Handling</h5>
+<span style="color:red">Definition:</span> Forces a coder to debug before compiling again.
+</br>
+<p>
+Steps:<br>
+1. Runnable coders are added to the scheduler.<br>
+2. The scheduler selects the next coder using FIFO or EDF.<br>
+3. Selected coders compile and release resources.<br>
+4. Waiting coders eventually get scheduled.<br>
+</p>
+</div>
+
+
+<div>
+<h5>Precise Burnout Detection</h5>
+<span style="color:red">Definition:</span>Detects when a coder exceeds the allowed inactivity time.
+</br>
+<p>
+Steps:<br>
+1. The monitor checks all coders periodically.<br>
+2. It compares the current time with the last compile time.<br>
+3. If the limit is exceeded, burnout is detected.<br>
+4. The simulation stops safely.<br>
+</p>
+</div>
+
+
+<div>
+<h5> Log Serialization</h5>
+<span style="color:red">Definition:</span>Prevents messages from different threads from mixing.
+</br>
+<p>
+Steps:<br>
+1. A thread locks the print mutex.<br>
+2. The message is printed.<br>
+3. The mutex is unlocked.<br>
+4. Another thread can print.<br>
+</p>
+</div>
+
+<div>
+<h5> Shared Data Protection</h5>
+<span style="color:red">Definition:</span>Prevents multiple threads from modifying shared data simultaneously.
+</br>
+<p>
+Steps:<br>
+1. A thread locks a mutex.<br>
+2. Shared data is accessed or modified.<br>
+3. The operation completes.<br>
+4. The mutex is unlocked.<br>
+</p>
+</div>
+
+<div>
+<h5> Condition Variable Synchronization</h5>
+<span style="color:red">Definition:</span> Allows threads to sleep until a condition becomes true.
+</br>
+<p>
+Steps:<br>
+1. A thread checks a condition.<br>
+2. If the condition is false, it waits.<br>
+3. Another thread updates the condition.<br>
+4. A signal wakes the waiting thread.<br>
+5. Execution continues.<br>
+</p>
+</div>

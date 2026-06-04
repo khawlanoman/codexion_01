@@ -80,8 +80,13 @@ void	smart_sleep(long var, t_coder *coder)
 	start_time = time_current();
 	time_left = 0;
 	last_update = start_time;
-	while (!get_stop(coder->data) || time_left < var)
+	while (!get_stop(coder->data) )
 	{
+		if (time_left > var)
+		{
+			get_stop(coder->data);
+		}
+		
 		usleep(1000);
 		time_left = time_current() - start_time;
 		if (time_current() - last_update >= 10)

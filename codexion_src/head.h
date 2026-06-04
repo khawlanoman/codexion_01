@@ -23,8 +23,8 @@
 
 typedef enum scheduler
 {
-	fifo,
-	edf
+	t_fifo,
+	t_edf
 }	t_scheduler_type;
 typedef struct coder	t_coder;
 typedef struct args

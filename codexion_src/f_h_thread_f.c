@@ -45,7 +45,7 @@ void	f_dongle_valid(t_coder *coder)
 
 void	fifo_groups(t_coder *coder)
 {
-	if (coder->data->args.scheduler == fifo)
+	if (coder->data->args.scheduler == t_fifo)
 	{
 		pthread_mutex_lock(&coder->data->group_lock);
 		if (coder->id % 2 == 0)
@@ -74,9 +74,9 @@ void	fifo_groups(t_coder *coder)
 void	f_priority(t_coder *coder, t_task task)
 {
 	pthread_mutex_lock(&coder->data->heap->lock);
-	if (coder->data->args.scheduler == fifo)
+	if (coder->data->args.scheduler == t_fifo)
 		task.priority = coder->data->fifo_order++;
-	else if (coder->data->args.scheduler == edf)
+	else if (coder->data->args.scheduler == t_edf)
 		task.priority = coder->last_compile_time
 			+ coder->data->args.time_to_burnout;
 	add_heap(coder->data->heap, task);

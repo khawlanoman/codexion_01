@@ -26,7 +26,7 @@ int	main(int argc, char **argv)
 	if (check_valid(argv, argc, &arg) == 1)
 		return (1);
 	data_init(&data, arg);
-	if (data.args.scheduler == fifo)
+	if (data.args.scheduler == t_fifo)
 		pthread_create(&data.controller_thread, NULL, controller, &data);
 	data.coders->last_compile_time = data.start_time;
 	data.dongles = create_array_dongles(&data);

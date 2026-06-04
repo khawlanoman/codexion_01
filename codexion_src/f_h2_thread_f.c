@@ -13,7 +13,7 @@
 
 void	fifo_group(t_coder *coder)
 {
-	if (coder->data->args.scheduler == fifo)
+	if (coder->data->args.scheduler == t_fifo)
 	{
 		pthread_mutex_lock(&coder->data->group_lock);
 		if (coder->id % 2 == 0)
@@ -28,7 +28,7 @@ void	debug_and_refactor(t_coder *coder)
 {
 	if (get_stop(coder->data))
 		return ;
-	print_state(coder, "is debuging");
+	print_state(coder, "is debugging");
 	smart_sleep(coder->data->args.time_to_debug, coder);
 	f_last_compile_time(coder);
 	if (get_stop(coder->data))

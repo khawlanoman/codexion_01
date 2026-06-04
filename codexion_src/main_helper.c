@@ -23,9 +23,9 @@ int	add_args(t_args *arg, char **argv)
 	arg->number_of_compiles_required = atoi(argv[6]);
 	arg->dongle_cooldown = atoi(argv[7]);
 	if (strcmp(argv[8], "fifo" ) == 0)
-		arg->scheduler = fifo;
+		arg->scheduler = t_fifo;
 	else if (strcmp(argv[8], "edf") == 0)
-		arg->scheduler = edf;
+		arg->scheduler = t_edf;
 	else
 	{
 		printf("error: scheduler must be fifo or edf");
@@ -73,7 +73,7 @@ void	f_join(t_data *data, t_args arg, pthread_t m_check)
 		pthread_join(data->coders[i].thread, NULL);
 		i++;
 	}
-	if (data->args.scheduler == fifo)
+	if (data->args.scheduler == t_fifo)
 		pthread_join(data->controller_thread, NULL);
 	pthread_join(m_check, NULL);
 }

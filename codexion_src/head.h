@@ -25,9 +25,17 @@ typedef enum scheduler
 {
 	t_fifo,
 	t_edf
+<<<<<<< HEAD
+} scheduler_type;
+
+typedef struct	coder t_coder;
+
+typedef struct	args
+=======
 }	t_scheduler_type;
 typedef struct coder	t_coder;
 typedef struct args
+>>>>>>> 57228ac967ad07078a23e2c3477954f3b17facf4
 {
 	int					number_of_coders;
 	int					number_of_compiles_required;

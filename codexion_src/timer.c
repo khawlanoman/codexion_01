@@ -82,7 +82,19 @@ void	smart_sleep(long var, t_coder *coder)
 	last_update = start_time;
 	while (!get_stop(coder->data))
 	{
+<<<<<<< HEAD
+		usleep(10000);
+		time_left = time_current() - start_time;
+		if (time_left >= var)
+			break;
+		if (get_stop(coder->data))
+			break;
+		
+		
+		if (time_current() - last_update >= 10)
+=======
 		if (time_left < var)
+>>>>>>> 57228ac967ad07078a23e2c3477954f3b17facf4
 		{
 			usleep(1000);
 			time_left = time_current() - start_time;
@@ -94,10 +106,14 @@ void	smart_sleep(long var, t_coder *coder)
 				last_update = time_current();
 			}
 		}
+<<<<<<< HEAD
+
+=======
 		else{
 			get_stop(coder->data);
 			break;
 		}
+>>>>>>> 57228ac967ad07078a23e2c3477954f3b17facf4
 		
 	}
 	pthread_mutex_lock(&coder->data->last_active_time);

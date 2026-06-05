@@ -38,6 +38,9 @@ void	*monitor_check(void *d)
 			if (check_finish_monitor(data, &i) == 0)
 				continue ;
 			now = time_current();
+			pthread_mutex_lock(&data->last_active_time);
+			printf("last_active_time:%lld, coder_id: %d\n",now - data->coders[i].last_active_time, data->coders[i].id);
+			pthread_mutex_unlock(&data->last_active_time);
 			if (now - read_last_active(data, &i) > data->args.time_to_burnout)
 			{
 				f_bunout(data, &i, now);

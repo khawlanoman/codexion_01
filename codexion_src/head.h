@@ -25,17 +25,12 @@ typedef enum scheduler
 {
 	t_fifo,
 	t_edf
-<<<<<<< HEAD
-} scheduler_type;
+
+} t_scheduler_type;
 
 typedef struct	coder t_coder;
 
-typedef struct	args
-=======
-}	t_scheduler_type;
-typedef struct coder	t_coder;
 typedef struct args
->>>>>>> 57228ac967ad07078a23e2c3477954f3b17facf4
 {
 	int					number_of_coders;
 	int					number_of_compiles_required;
@@ -122,7 +117,7 @@ void			add_dongles_to_coders(t_data *data,
 void			init_dongles(t_dongle *dongles, t_data *data);
 void			set_stop(t_data *data);
 void			*monitor_check(void *data);
-void			smart_sleep(long var, t_coder *coder);
+int			smart_sleep(long var, t_coder *coder);
 void			add_heap(t_heap *heap, t_task task);
 void			swap_task(t_task *a, t_task *b);
 void			heap_check(t_heap *heap, int i);

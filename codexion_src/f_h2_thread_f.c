@@ -29,12 +29,14 @@ void	debug_and_refactor(t_coder *coder)
 	if (get_stop(coder->data))
 		return ;
 	print_state(coder, "is debugging");
-	smart_sleep(coder->data->args.time_to_debug, coder);
+	if(smart_sleep(coder->data->args.time_to_debug, coder)== 1)
+		return ;
 	f_last_compile_time(coder);
 	if (get_stop(coder->data))
 		return ;
 	print_state(coder, "is refactoring");
-	smart_sleep(coder->data->args.time_to_refactor, coder);
+	if(smart_sleep(coder->data->args.time_to_refactor, coder)== 1)
+		return ;
 	f_last_compile_time(coder);
 }
 

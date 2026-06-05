@@ -53,7 +53,8 @@ void	compile_and_unlock_remove_min(t_coder *coder)
 	print_state(coder, "is compiling");
 	pthread_mutex_unlock(&coder->first->mutex);
 	pthread_mutex_unlock(&coder->second->mutex);
-	smart_sleep(coder->data->args.time_to_compile, coder);
+	if(smart_sleep(coder->data->args.time_to_compile, coder) == 1)
+		return ;
 	f_last_compile_time(coder);
 	f_dongle_valid(coder);
 	pthread_mutex_lock(&coder->data->heap->lock);

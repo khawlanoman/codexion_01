@@ -71,7 +71,7 @@ int	check_coders(t_data *data)
 	return (1);
 }
 
-void	smart_sleep(long var, t_coder *coder)
+int	smart_sleep(long var, t_coder *coder)
 {
 	long long	start_time;
 	long long	time_left;
@@ -80,45 +80,30 @@ void	smart_sleep(long var, t_coder *coder)
 	start_time = time_current();
 	time_left = 0;
 	last_update = start_time;
-	while (!get_stop(coder->data))
+	while ((!get_stop(coder->data) && time_left < var ))
 	{
-<<<<<<< HEAD
 		usleep(10000);
 		time_left = time_current() - start_time;
-		if (time_left >= var)
+		
+		if (time_left >= var )
 			break;
+
 		if (get_stop(coder->data))
 			break;
 		
-		
 		if (time_current() - last_update >= 10)
-=======
-		if (time_left < var)
->>>>>>> 57228ac967ad07078a23e2c3477954f3b17facf4
 		{
-			usleep(1000);
-			time_left = time_current() - start_time;
-			if (time_current() - last_update >= 10)
-			{
-				pthread_mutex_lock(&coder->data->last_active_time);
-				coder->last_active_time = time_current();
-				pthread_mutex_unlock(&coder->data->last_active_time);
-				last_update = time_current();
-			}
+			pthread_mutex_lock(&coder->data->last_active_time);
+			coder->last_active_time = time_current();
+			pthread_mutex_unlock(&coder->data->last_active_time);
+			last_update = time_current();
 		}
-<<<<<<< HEAD
-
-=======
-		else{
-			get_stop(coder->data);
-			break;
-		}
->>>>>>> 57228ac967ad07078a23e2c3477954f3b17facf4
-		
+		//printf("t_f:%lld, var:%ld\n",time_left, var);
 	}
 	pthread_mutex_lock(&coder->data->last_active_time);
 	coder->last_active_time = time_current();
 	pthread_mutex_unlock(&coder->data->last_active_time);
+	return (0);
 }
 
 void	*controller(void *arg)

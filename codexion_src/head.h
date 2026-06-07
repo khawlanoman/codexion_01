@@ -116,7 +116,7 @@ void			add_dongles_to_coders(t_data *data,
 					t_coder *coder, t_dongle *dongles);
 void			init_dongles(t_dongle *dongles, t_data *data);
 void			set_stop(t_data *data);
-void			*monitor_check(void *data);
+void			*monitor_check(void *d);
 int			smart_sleep(long var, t_coder *coder);
 void			add_heap(t_heap *heap, t_task task);
 void			swap_task(t_task *a, t_task *b);

@@ -9,12 +9,18 @@
 <li><a href="#Project_Description"> Project Description </a></li>
 <li><a href="#Rules"> Rules </a></li>
 <li><a href="#Project_Structure"> Project Structure </a></li>
+<li><a href="#Blocking_Cases"> Blocking Cases Handled in This Project </a></li>
+<li><a href="#Thread_Synchronization"> Thread Synchronization Mechanisms </a></li>
 <li><a href="#Resources"> Resources </a></li>
+<li><a href="#AI_Usage"> AI Usage </a></li>
+
 
 </ul>
 <h2 style="font-size: 27px;" id="overview"> 🎯 Overview </h2>
 <p>
-codexion is a multithreaded CPU scheduling simulator written in C , it models how an operationg system manages multiple threads competing for CPU time and shared resources.
+Codexion is a multithreaded CPU scheduling simulator written in C. It models how an operating system manages multiple threads competing for CPU time and shared resources.
+
+The project explores concepts such as threads, mutexes, scheduling algorithms, synchronization, burnout detection, and deadlock prevention.
 </p>
 
 <h2 style="font-size: 27px;" id="Installation"> 🛠️ Installation</h2>
@@ -51,10 +57,15 @@ codexion is a multithreaded CPU scheduling simulator written in C , it models ho
 <div>
 <h2 style="font-size: 27px;"id="Project_Description"> 📖 Project Description</h2>
 <p>
-Codexion is a multithreaded project with N coders and N dongles.
-Each coder needs two dongles (left and right) to start working.
-Coders are threads and they share dongles using mutex to avoid conflict.
-The scheduler decides which coder works and when.
+Codexion simulates a system with N coders and N dongles.
+Each coder is represented by a thread. To start compiling, a coder must acquire two dongles (left and right). Since dongles are shared resources, mutexes are used to prevent conflicts.
+
+A scheduler decides which coder is allowed to work according to the selected scheduling policy.
+
+Supported scheduling policies:
+
+FIFO (First In, First Out)
+EDF (Earliest Deadline First)
 </p>
 </div>
 
@@ -148,21 +159,9 @@ codexion/
 ├── Makefile
 └── README.md
 </pre>
-<div>
-<h2  style="font-size: 27px;" id="Resources"> 📚 Resources </h2>
-<h4 style="font-size: 20px;"> Useful Links:</h4>
-<ul>
-<li> <a href="https://www.geeksforgeeks.org/dsa/introduction-to-min-heap-data-structure/"> introduction to min heap data structure</a> </li>
-<li> <a href="https://www.geeksforgeeks.org/operating-systems/thread-in-operating-system/"> thread in operating system</a></li>
-<li><a href="https://eng.libretexts.org/Courses/Delta_College/Operating_System:_The_Basics/04:_Threads/4.2:_Thread_Types">thread types<a/></li>
-<li><a href="https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/#using-posix-threads">thread types<a/>threads</li>
-<li><a href="https://www.youtube.com/watch?v=M9HHWFp84f0">video threads<a/></li>
-<li><a href="https://www.youtube.com/watch?v=O2tV9q6784k&t=710s">video threads<a/></li>
-<li><a href="https://www.tldraw.com/f/Fz6hc3-hn_mhDGBgKt_6-?d=v-3828.1861.19881.23146.page"> my project notes </a></li>
-</ul>
-</div>
 
-<h3 style="font-size: 27px;" id="blocking_cases_handled">Blocking Cases Handled in This Project </h3>
+
+<h3 style="font-size: 27px;" id="Blocking_Cases">Blocking Cases Handled in This Project </h3>
 
 <div>
 <h5>Deadlock Prevention</h5>
@@ -193,14 +192,15 @@ Steps:<br>
 
 <div>
 <h5>Cooldown Handling</h5>
-<span style="color:red">Definition:</span> Forces a coder to debug before compiling again.
+<span style="color:red">Definition:</span> After being released, a dongle becomes unavailable for a short cooldown period before another coder can use it.
 </br>
 <p>
 Steps:<br>
-1. Runnable coders are added to the scheduler.<br>
-2. The scheduler selects the next coder using FIFO or EDF.<br>
-3. Selected coders compile and release resources.<br>
-4. Waiting coders eventually get scheduled.<br>
+1. A coder finishes using a dongle.<br>
+2. The dongle is released.<br>
+3. The dongle enters a cooldown period<br>
+4. During this time, no other coder can use it.<br>
+5. After the cooldown ends, the dongle becomes available again.<br>
 </p>
 </div>
 
@@ -211,8 +211,8 @@ Steps:<br>
 </br>
 <p>
 Steps:<br>
-1. The monitor checks all coders periodically.<br>
-2. It compares the current time with the last compile time.<br>
+1. The monitor checks all coders .<br>
+2. It compares the current time with the last active time.<br>
 3. If the limit is exceeded, burnout is detected.<br>
 4. The simulation stops safely.<br>
 </p>
@@ -246,15 +246,55 @@ Steps:<br>
 </div>
 
 <div>
-<h5> Condition Variable Synchronization</h5>
-<span style="color:red">Definition:</span> Allows threads to sleep until a condition becomes true.
-</br>
+<h2 id ="Thread_Synchronization">🔒 Thread Synchronization Mechanisms</h2>
+<h5 style="color:green">pthread_mutex_t</h5>
+
+<h6>Mutexes protect shared resources and prevent race conditions.</h6>
+
+<span style="color:yellow">Used for: </span>
 <p>
-Steps:<br>
-1. A thread checks a condition.<br>
-2. If the condition is false, it waits.<br>
-3. Another thread updates the condition.<br>
-4. A signal wakes the waiting thread.<br>
-5. Execution continues.<br>
+Dongle ownership<br>
+Console logging<br>
+Shared scheduler data<br>
+Monitor state<br>
+Stop conditions<br>
 </p>
+<h4 style="color:green">Race Condition Prevention</h4>
+
+<p>Before accessing shared data, a thread locks the corresponding mutex. After the operation is completed, the mutex is unlocked.</p>
+
+<h4 style="color:green">pthread_cond_t (if used)</h4>
+
+<p>Condition variables allow threads to sleep until a condition becomes true.<\p>
+
+<p>They are used to avoid busy waiting and coordinate thread execution.</p>
+
+<h4 style="color:green">Thread-Safe Communication</h4>
+
+<p>Coders and the monitor communicate using shared variables protected by mutexes.</p>
+
+<p>This guarantees consistent and safe access to shared state.</p>
+</div>
+
+
+<div>
+<h2  style="font-size: 27px;" id="Resources"> 📚 Resources </h2>
+<h4 style="font-size: 20px;"> Useful Links:</h4>
+<ul>
+<li> <a href="https://www.geeksforgeeks.org/dsa/introduction-to-min-heap-data-structure/"> introduction to min heap data structure</a> </li>
+<li> <a href="https://www.geeksforgeeks.org/operating-systems/thread-in-operating-system/"> thread in operating system</a></li>
+<li><a href="https://eng.libretexts.org/Courses/Delta_College/Operating_System:_The_Basics/04:_Threads/4.2:_Thread_Types">thread types<a/></li>
+<li><a href="https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/#using-posix-threads">thread types<a/>threads</li>
+<li><a href="https://www.youtube.com/watch?v=M9HHWFp84f0">video threads<a/></li>
+<li><a href="https://www.youtube.com/watch?v=O2tV9q6784k&t=710s">video threads<a/></li>
+<li><a href="https://www.tldraw.com/f/Fz6hc3-hn_mhDGBgKt_6-?d=v-3828.1861.19881.23146.page"> my project notes </a></li>
+</ul>
+
+<h3 id="AI_Usage">AI Usage</h3>
+<ol>
+<li>AI was used as a learning assistant to:</li>
+<li>Understand operating system concepts.</li>
+<li>Clarify pthread behavior.</li>
+<li>Explore scheduling algorithms.</li>
+</ol>
 </div>

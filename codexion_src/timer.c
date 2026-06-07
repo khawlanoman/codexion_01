@@ -12,7 +12,7 @@
 
 #include "head.h"
 
-long long	time_current(void)
+long long	time_current()
 {
 	long long		time_now;
 	struct timeval	time;
@@ -38,9 +38,8 @@ void	*monitor_check(void *d)
 			if (check_finish_monitor(data, &i) == 0)
 				continue ;
 			now = time_current();
-			pthread_mutex_lock(&data->last_active_time);
-			printf("last_active_time:%lld, coder_id: %d\n",now - data->coders[i].last_active_time, data->coders[i].id);
-			pthread_mutex_unlock(&data->last_active_time);
+			
+			//printf("last_active_time:%lld, coder_id: %d\n",now - read_last_active(data, &i), data->coders[i].id);
 			if (now - read_last_active(data, &i) > data->args.time_to_burnout)
 			{
 				f_bunout(data, &i, now);
@@ -90,18 +89,12 @@ int	smart_sleep(long var, t_coder *coder)
 		
 		if (time_left >= var )
 			break;
-
 		if (get_stop(coder->data))
 			break;
-		
 		if (time_current() - last_update >= 10)
 		{
-			pthread_mutex_lock(&coder->data->last_active_time);
-			coder->last_active_time = time_current();
-			pthread_mutex_unlock(&coder->data->last_active_time);
 			last_update = time_current();
 		}
-		//printf("t_f:%lld, var:%ld\n",time_left, var);
 	}
 	pthread_mutex_lock(&coder->data->last_active_time);
 	coder->last_active_time = time_current();

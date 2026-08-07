@@ -57,7 +57,6 @@ void	data_init(t_data *data, t_args arg)
 	pthread_mutex_init(&data->m_stop, NULL);
 	pthread_mutex_init(&data->m_last_compile, NULL);
 	pthread_mutex_init(&data->compile_count, NULL);
-	pthread_mutex_init(&data->last_active_time, NULL);
 	pthread_mutex_init(&data->check_finish, NULL);
 	data->heap = alocate_heap(data->args.number_of_coders);
 	data->coders = create_array_coders(data);
@@ -95,7 +94,6 @@ void	f_destroy_and_free(t_data *data, t_args arg)
 	pthread_mutex_destroy(&data->m_last_compile);
 	pthread_cond_destroy(&data->cond_check);
 	pthread_mutex_destroy(&data->compile_count);
-	pthread_mutex_destroy(&data->last_active_time);
 	pthread_mutex_destroy(&data->check_finish);
 	free(data->dongles);
 	free(data->coders);

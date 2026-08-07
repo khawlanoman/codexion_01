@@ -50,12 +50,18 @@ void	check_first_and_second(t_coder *coder)
 
 void	compile_and_unlock_remove_min(t_coder *coder)
 {
+	if (get_stop(coder->data))
+	{
+		pthread_mutex_unlock(&coder->first->mutex);
+		pthread_mutex_unlock(&coder->second->mutex);
+		return ;
+	}
 	print_state(coder, "is compiling");
+	f_last_compile_time(coder);
 	pthread_mutex_unlock(&coder->first->mutex);
 	pthread_mutex_unlock(&coder->second->mutex);
-	if(smart_sleep(coder->data->args.time_to_compile, coder) == 1)
+	if (smart_sleep(coder->data->args.time_to_compile, coder) == 1)
 		return ;
-	f_last_compile_time(coder);
 	f_dongle_valid(coder);
 	pthread_mutex_lock(&coder->data->heap->lock);
 	remove_min(coder->data->heap);
@@ -79,11 +85,4 @@ int	coder_cycle(t_coder *coder)
 	fifo_group(coder);
 	debug_and_refactor(coder);
 	return (1);
-}
-
-void	check_last_active(t_coder *coder)
-{
-	pthread_mutex_lock(&coder->data->last_active_time);
-	coder->last_active_time = time_current();
-	pthread_mutex_unlock(&coder->data->last_active_time);
 }

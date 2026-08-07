@@ -28,9 +28,9 @@ long long	read_last_active(t_data *data, int *i)
 {
 	long long	x;
 
-	pthread_mutex_lock(&data->last_active_time);
-	x = data->coders[*i].last_active_time;
-	pthread_mutex_unlock(&data->last_active_time);
+	pthread_mutex_lock(&data->m_last_compile);
+	x = data->coders[*i].last_compile_time;
+	pthread_mutex_unlock(&data->m_last_compile);
 	return (x);
 }
 

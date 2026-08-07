@@ -20,7 +20,6 @@ void	*thread_f(void *arg)
 	{
 		if (check_finish(coder) == 0)
 			break ;
-		check_last_active(coder);
 		if (check_compile_count(coder) == 0)
 			return (NULL);
 		if (coder_cycle(coder) == 0)
@@ -53,7 +52,6 @@ t_coder	*create_array_coders(t_data *data)
 		arr_coders[i].right_dongle = NULL;
 		arr_coders[i].compile_count = 0;
 		arr_coders[i].last_compile_time = data->start_time;
-		arr_coders[i].last_active_time = data->start_time;
 		arr_coders[i].data = data;
 		i++;
 	}

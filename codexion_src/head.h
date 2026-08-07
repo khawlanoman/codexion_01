@@ -25,10 +25,9 @@ typedef enum scheduler
 {
 	t_fifo,
 	t_edf
+}	t_scheduler_type;
 
-} t_scheduler_type;
-
-typedef struct	coder t_coder;
+typedef struct coder	t_coder;
 
 typedef struct args
 {
@@ -78,7 +77,7 @@ typedef struct s_data
 	pthread_mutex_t	m_stop;
 	pthread_mutex_t	m_last_compile;
 	pthread_mutex_t	compile_count;
-	pthread_mutex_t	last_active_time;
+	// pthread_mutex_t	last_active_time;
 	pthread_mutex_t	check_finish;
 }	t_data;
 typedef struct coder
@@ -109,6 +108,7 @@ int				check_finish_monitor(t_data *data, int *i);
 int				check_coder_in_monitor(t_data *data);
 int				add_args(t_args *arg, char **argv);
 int				check_valid(char **argv, int argc, t_args *arg);
+int				smart_sleep(long var, t_coder *coder);
 char			*check_args(t_args *arg);
 char			*valid_args(char **argv, int argc);
 void			create_coders(t_args *arg, t_coder *arr_coder);
@@ -117,7 +117,6 @@ void			add_dongles_to_coders(t_data *data,
 void			init_dongles(t_dongle *dongles, t_data *data);
 void			set_stop(t_data *data);
 void			*monitor_check(void *d);
-int			smart_sleep(long var, t_coder *coder);
 void			add_heap(t_heap *heap, t_task task);
 void			swap_task(t_task *a, t_task *b);
 void			heap_check(t_heap *heap, int i);
@@ -131,7 +130,7 @@ void			f_priority(t_coder *coder, t_task task);
 void			fifo_group(t_coder *coder);
 void			debug_and_refactor(t_coder *coder);
 void			compile_and_unlock_remove_min(t_coder *coder);
-void			check_last_active(t_coder *coder);
+//void			check_last_active(t_coder *coder);
 void			*controller(void *arg);
 void			update_group(t_data *data);
 void			f_bunout(t_data *data, int *i, long long now);

@@ -16,10 +16,13 @@ void	print_state(t_coder *coder, char *string)
 	long long	timestamp;
 	long long	time_now;
 
-	time_now = time_current();
 	pthread_mutex_lock(&coder->data->print_lock);
-	timestamp = time_now - coder->data->start_time;
-	printf("%lld %d %s\n", timestamp, coder->id, string);
+	if (!get_stop(coder->data))
+	{
+		time_now = time_current();
+		timestamp = time_now - coder->data->start_time;
+		printf("%lld %d %s\n", timestamp, coder->id, string);
+	}
 	pthread_mutex_unlock(&coder->data->print_lock);
 }
 

@@ -77,7 +77,6 @@ typedef struct s_data
 	pthread_mutex_t	m_stop;
 	pthread_mutex_t	m_last_compile;
 	pthread_mutex_t	compile_count;
-	// pthread_mutex_t	last_active_time;
 	pthread_mutex_t	check_finish;
 }	t_data;
 typedef struct coder
@@ -130,7 +129,6 @@ void			f_priority(t_coder *coder, t_task task);
 void			fifo_group(t_coder *coder);
 void			debug_and_refactor(t_coder *coder);
 void			compile_and_unlock_remove_min(t_coder *coder);
-//void			check_last_active(t_coder *coder);
 void			*controller(void *arg);
 void			update_group(t_data *data);
 void			f_bunout(t_data *data, int *i, long long now);

@@ -100,5 +100,6 @@ int	lock_dongles(t_coder *coder)
 		pthread_mutex_unlock(&coder->second->mutex);
 		usleep(1000);
 	}
-	return (1);
+	//
+	return (0);
 }

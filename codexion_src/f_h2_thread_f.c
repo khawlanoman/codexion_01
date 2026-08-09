@@ -52,7 +52,7 @@ int	print_and_check_dongles(t_coder *coder)
 int	heap_check_wait(t_coder *coder)
 {
 	pthread_mutex_lock(&coder->data->heap->lock);
-	while (!get_stop(coder->data) && coder->data->heap->size == 0)
+	while (!get_stop(coder->data) && coder->data->heap->size == 0 )
 	{
 		pthread_cond_wait(&coder->data->cond_check, &coder->data->heap->lock);
 	}

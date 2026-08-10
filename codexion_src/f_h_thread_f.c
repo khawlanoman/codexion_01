@@ -22,8 +22,10 @@ void	print_state(t_coder *coder, char *string)
 		time_now = time_current();
 		timestamp = time_now - coder->data->start_time;
 		printf("%lld %d %s\n", timestamp, coder->id, string);
+
 	}
 	pthread_mutex_unlock(&coder->data->print_lock);
+
 }
 
 void	f_last_compile_time(t_coder *coder)

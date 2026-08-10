@@ -76,11 +76,14 @@ int	smart_sleep(long var, t_coder *coder)
 	long long	time_left;
 	long long	last_update;
 
+	
 	start_time = time_current();
 	time_left = 0;
 	last_update = start_time;
+	
 	while ((!get_stop(coder->data) && time_left < var))
 	{
+		
 		usleep(100);
 		time_left = time_current() - start_time;
 		if (time_left >= var)
@@ -91,6 +94,7 @@ int	smart_sleep(long var, t_coder *coder)
 		{
 			last_update = time_current();
 		}
+	
 	}
 	return (0);
 }

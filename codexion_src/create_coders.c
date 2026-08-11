@@ -16,17 +16,14 @@ void	*thread_f(void *arg)
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
-
 	while (!get_stop(coder->data))
 	{
 		if (check_finish(coder) == 0)
 			break ;
 		if (check_compile_count(coder) == 0)
 			return (NULL);
-
 		if (coder_cycle(coder) == 0)
 			return (NULL);
-
 		if (get_stop(coder->data))
 			return (NULL);
 		pthread_mutex_lock(&coder->data->compile_count);
@@ -90,7 +87,6 @@ int	lock_dongles(t_coder *coder)
 	{
 		pthread_mutex_lock(&coder->first->mutex);
 		pthread_mutex_lock(&coder->second->mutex);
-
 		time_now = time_current();
 		if (time_now >= coder->first->is_valid
 			&& time_now >= coder->second->is_valid

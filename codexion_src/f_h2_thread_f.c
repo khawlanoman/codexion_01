@@ -42,6 +42,7 @@ int	print_and_check_dongles(t_coder *coder)
 {
 	if (lock_dongles(coder) == 0)
 		return (0);
+
 	if (get_stop(coder->data))
 		return (0);
 	print_state(coder, "has taken a dongle");

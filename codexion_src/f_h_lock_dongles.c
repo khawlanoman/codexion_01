@@ -51,11 +51,8 @@ void	check_first_and_second(t_coder *coder)
 void	compile_and_unlock_remove_min(t_coder *coder)
 {
 	if (get_stop(coder->data))
-	{
-		pthread_mutex_unlock(&coder->first->mutex);
-		pthread_mutex_unlock(&coder->second->mutex);
 		return ;
-	}
+	
 	print_state(coder, "is compiling");
 	
 
@@ -87,14 +84,13 @@ int	coder_cycle(t_coder *coder)
 		return (0);
 	
 	if (print_and_check_dongles(coder) == 0)
+		return (0);
+	if (get_stop(coder->data))
 	{
 		pthread_mutex_unlock(&coder->first->mutex);
 		pthread_mutex_unlock(&coder->second->mutex);
 		return (0);
 	}
-	if (get_stop(coder->data))
-		return (0);
-
 	compile_and_unlock_remove_min(coder);
 	
 	//fifo_group(coder);

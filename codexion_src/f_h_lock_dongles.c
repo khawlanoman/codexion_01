@@ -36,7 +36,7 @@ int	for_one_dongle(t_coder *coder)
 
 void	check_first_and_second(t_coder *coder)
 {
-	if (coder->left_dongle < coder->right_dongle)
+	if (coder->id % 2 == 0)
 	{
 		coder->first = coder->left_dongle;
 		coder->second = coder->right_dongle;
@@ -62,6 +62,7 @@ void	compile_and_unlock_remove_min(t_coder *coder)
 	pthread_mutex_unlock(&coder->second->mutex);
 	pthread_mutex_lock(&coder->data->heap->lock);
 	remove_min(coder->data->heap);
+	pthread_cond_broadcast(&coder->data->cond_check);
 	pthread_mutex_unlock(&coder->data->heap->lock);
 	if (smart_sleep(coder->data->args.time_to_compile, coder) == 1)
 		return ;

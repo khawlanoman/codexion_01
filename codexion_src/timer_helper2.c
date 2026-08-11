@@ -34,13 +34,16 @@ int	check_coder_in_monitor(t_data *data)
 
 int	check_compile_count(t_coder *coder)
 {
+	//pthread_mutex_lock(&coder->data->compile_count);
 	if (coder->compile_count >= coder->data->args.number_of_compiles_required)
 	{
 		pthread_mutex_lock(&coder->data->check_finish);
 		coder->finish = 1;
 		pthread_mutex_unlock(&coder->data->check_finish);
+		//pthread_mutex_unlock(&coder->data->compile_count);
 		return (0);
 	}
+	//pthread_mutex_unlock(&coder->data->compile_count);
 	return (1);
 }
 

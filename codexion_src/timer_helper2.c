@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 #include "head.h"
 
+
 void	f_bunout(t_data *data, int *i, long long now)
 {
 	long long	timestamp;

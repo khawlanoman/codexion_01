@@ -51,13 +51,14 @@ void	check_first_and_second(t_coder *coder)
 void	compile_and_unlock_remove_min(t_coder *coder)
 {
 	if (get_stop(coder->data))
+	{
+		pthread_mutex_unlock(&coder->first->mutex);
+		pthread_mutex_unlock(&coder->second->mutex);
 		return ;
-	
+	}
 	print_state(coder, "is compiling");
-	
-
 	f_last_compile_time(coder);
-	
+
 	pthread_mutex_unlock(&coder->first->mutex);
 	pthread_mutex_unlock(&coder->second->mutex);
 

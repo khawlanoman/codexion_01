@@ -16,6 +16,7 @@ void	*thread_f(void *arg)
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
+
 	while (!get_stop(coder->data))
 	{
 		if (check_finish(coder) == 0)
@@ -101,7 +102,7 @@ int	lock_dongles(t_coder *coder)
 		}
 		pthread_mutex_unlock(&coder->first->mutex);
 		pthread_mutex_unlock(&coder->second->mutex);
-		usleep(1000);
+		usleep(100);
 	}
 	return (0);
 }

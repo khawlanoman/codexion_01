@@ -37,6 +37,7 @@ void	f_last_compile_time(t_coder *coder)
 
 void	f_dongle_valid(t_coder *coder)
 {
+	if (!get_stop(coder->data)){
 	pthread_mutex_lock(&coder->first->mutex);
 	coder->first->is_valid = time_current() + coder->data->args.dongle_cooldown;
 	coder->first->is_use = 0;
@@ -46,6 +47,8 @@ void	f_dongle_valid(t_coder *coder)
 		+ coder->data->args.dongle_cooldown;
 	coder->second->is_use = 0;
 	pthread_mutex_unlock(&coder->second->mutex);
+	}
+
 }
 
 void	fifo_groups(t_coder *coder)

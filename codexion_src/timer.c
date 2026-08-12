@@ -43,7 +43,7 @@ void	*monitor_check(void *d)
 			}
 			i++;
 		}
-		usleep(10000);
+		usleep(1000);
 		if (check_coder_in_monitor(data) == 0)
 			return (NULL);
 	}

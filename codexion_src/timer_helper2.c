@@ -15,8 +15,11 @@ void	f_bunout(t_data *data, int *i, long long now)
 {
 	long long	timestamp;
 
+	pthread_mutex_lock(&data->heap->lock);
 	set_stop(data);
 	pthread_mutex_lock(&data->print_lock);
+	pthread_cond_broadcast(&data->cond_check);
+	pthread_mutex_unlock(&data->heap->lock);
 	timestamp = now - data->coders[*i].data->start_time;
 	printf("%lld %d burned out\n", timestamp, data->coders[*i].id);
 	pthread_mutex_unlock(&data->print_lock);
@@ -34,16 +37,16 @@ int	check_coder_in_monitor(t_data *data)
 
 int	check_compile_count(t_coder *coder)
 {
-	//pthread_mutex_lock(&coder->data->compile_count);
+	pthread_mutex_lock(&coder->data->compile_count);
 	if (coder->compile_count >= coder->data->args.number_of_compiles_required)
 	{
 		pthread_mutex_lock(&coder->data->check_finish);
 		coder->finish = 1;
 		pthread_mutex_unlock(&coder->data->check_finish);
-		//pthread_mutex_unlock(&coder->data->compile_count);
+		pthread_mutex_unlock(&coder->data->compile_count);
 		return (0);
 	}
-	//pthread_mutex_unlock(&coder->data->compile_count);
+	pthread_mutex_unlock(&coder->data->compile_count);
 	return (1);
 }
 

@@ -2,7 +2,7 @@ NAME = codexion
 
 RM = rm -f
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -pthread -g
+CFLAGS = -Wall -Wextra -Werror -pthread -g 
 
 SRC = codexion_src/create_coders.c \
 	  codexion_src/create_dongles.c \

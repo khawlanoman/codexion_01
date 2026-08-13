@@ -56,24 +56,21 @@ void	fifo_groups(t_coder *coder)
 	{
 		pthread_mutex_lock(&coder->data->group_lock);
 		if (coder->id % 2 == 0)
-		{
 			coder->my_group = 1;
-			pthread_mutex_unlock(&coder->data->group_lock);
-		}
 		else
-		{
 			coder->my_group = 0;
-			pthread_mutex_unlock(&coder->data->group_lock);
-		}
+		pthread_mutex_unlock(&coder->data->group_lock);
 		while (!get_stop(coder->data))
 		{
 			pthread_mutex_lock(&coder->data->group_lock);
-			if (coder->data->group == coder->my_group)
+			if (coder->data->group == coder->my_group
+				&& coder->compile_count == coder->data->phase)
 			{
 				pthread_mutex_unlock(&coder->data->group_lock);
 				break ;
 			}
 			pthread_mutex_unlock(&coder->data->group_lock);
+			usleep(100);
 		}
 	}
 }

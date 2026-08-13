@@ -73,6 +73,7 @@ int	coder_cycle(t_coder *coder)
 {
 	t_task	task;
 
+	fifo_groups(coder);
 	task.id = coder->id;
 	f_priority(coder, task);
 	if (heap_check_wait(coder) == 0)
@@ -86,6 +87,7 @@ int	coder_cycle(t_coder *coder)
 		return (0);
 	}
 	compile_and_unlock_remove_min(coder);
+	fifo_group(coder);
 	debug_and_refactor(coder);
 	return (1);
 }

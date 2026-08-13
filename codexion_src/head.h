@@ -78,6 +78,7 @@ typedef struct s_data
 	pthread_mutex_t	m_last_compile;
 	pthread_mutex_t	compile_count;
 	pthread_mutex_t	check_finish;
+	int				phase;
 }	t_data;
 typedef struct coder
 {

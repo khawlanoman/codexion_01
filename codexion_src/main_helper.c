@@ -48,9 +48,13 @@ void	data_init(t_data *data, t_args arg)
 	data->start_time = time_current();
 	data->stop = 0;
 	data->fifo_order = 0;
+	data->phase = 0;
 	data->group = 0;
-	data->group_count_one = 0;
-	data->group_count_two = 0;
+	if (data->args.number_of_coders % 2 == 0)
+		data->group_count_one = data->args.number_of_coders / 2 ;
+	else
+		data->group_count_one = (data->args.number_of_coders / 2) + 1;
+	data->group_count_two = data->args.number_of_coders / 2;
 	pthread_mutex_init(&data->group_lock, NULL);
 	pthread_cond_init(&data->cond_check, NULL);
 	pthread_mutex_init(&data->print_lock, NULL);

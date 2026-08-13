@@ -49,6 +49,7 @@ void	update_group(t_data *data)
 	{
 		data->group = 0;
 		data->group_count_two = data->args.number_of_coders / 2;
+		data->phase++;
 	}
 	pthread_mutex_unlock(&data->group_lock);
 }

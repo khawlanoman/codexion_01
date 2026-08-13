@@ -36,7 +36,7 @@ void	*monitor_check(void *d)
 		{
 			if (check_finish_monitor(data, &i) == 0)
 				continue ;
-			if (now - read_last_active(data, &i) >= data->args.time_to_burnout)
+			if (now - read_last_active(data, &i) > data->args.time_to_burnout)
 			{
 				f_bunout(data, &i, now);
 				return (NULL);

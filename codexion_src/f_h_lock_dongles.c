@@ -56,16 +56,25 @@ void	compile_and_unlock_remove_min(t_coder *coder)
 		pthread_mutex_unlock(&coder->second->mutex);
 		return ;
 	}
+
+	pthread_mutex_lock(&coder->data->compile_mutex);
+	coder->is_compiling = 1;
+	pthread_mutex_unlock(&coder->data->compile_mutex);
 	print_state(coder, "is compiling");
+	if (smart_sleep(coder->data->args.time_to_compile, coder) == 1)
+		return ;
+	
 	f_last_compile_time(coder);
+	pthread_mutex_lock(&coder->data->compile_mutex);
+	coder->is_compiling = 0;
+	pthread_mutex_unlock(&coder->data->compile_mutex);
 	pthread_mutex_unlock(&coder->first->mutex);
 	pthread_mutex_unlock(&coder->second->mutex);
+	
 	pthread_mutex_lock(&coder->data->heap->lock);
 	remove_min(coder->data->heap);
 	pthread_cond_broadcast(&coder->data->cond_check);
 	pthread_mutex_unlock(&coder->data->heap->lock);
-	if (smart_sleep(coder->data->args.time_to_compile, coder) == 1)
-		return ;
 	f_dongle_valid(coder);
 }
 

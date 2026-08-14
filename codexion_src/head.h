@@ -74,6 +74,7 @@ typedef struct s_data
 	pthread_cond_t	cond_check;
 	pthread_mutex_t	group_lock;
 	pthread_mutex_t	print_lock;
+	pthread_mutex_t	compile_mutex;
 	pthread_mutex_t	m_stop;
 	pthread_mutex_t	m_last_compile;
 	pthread_mutex_t	compile_count;
@@ -88,6 +89,7 @@ typedef struct coder
 	int			my_group;
 	long		last_compile_time;
 	long		last_active_time;
+	int			is_compiling;
 	t_data		*data;
 	t_dongle	*left_dongle;
 	t_dongle	*right_dongle;

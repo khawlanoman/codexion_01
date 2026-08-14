@@ -51,6 +51,7 @@ t_coder	*create_array_coders(t_data *data)
 		arr_coders[i].left_dongle = NULL;
 		arr_coders[i].right_dongle = NULL;
 		arr_coders[i].compile_count = 0;
+		arr_coders[i].is_compiling = 0;
 		arr_coders[i].last_compile_time = data->start_time;
 		arr_coders[i].data = data;
 		i++;

@@ -21,6 +21,15 @@ long long	time_current(void)
 	return (time_now);
 }
 
+int check_compile(t_data *data, int *i)
+{
+	int k;
+
+	pthread_mutex_lock(&data->compile_mutex);
+	k = data->coders[*i].is_compiling;
+	pthread_mutex_unlock(&data->compile_mutex);
+	return k;
+}
 void	*monitor_check(void *d)
 {
 	int			i;
@@ -32,7 +41,8 @@ void	*monitor_check(void *d)
 	{
 		i = 0;
 		now = time_current();
-		while (i < data->args.number_of_coders)
+
+		while (!check_compile(data, &i) && i < data->args.number_of_coders)
 		{
 			if (check_finish_monitor(data, &i) == 0)
 				continue ;

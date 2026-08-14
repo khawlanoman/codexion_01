@@ -58,6 +58,7 @@ void	data_init(t_data *data, t_args arg)
 	pthread_mutex_init(&data->group_lock, NULL);
 	pthread_cond_init(&data->cond_check, NULL);
 	pthread_mutex_init(&data->print_lock, NULL);
+	pthread_mutex_init(&data->compile_mutex, NULL);
 	pthread_mutex_init(&data->m_stop, NULL);
 	pthread_mutex_init(&data->m_last_compile, NULL);
 	pthread_mutex_init(&data->compile_count, NULL);

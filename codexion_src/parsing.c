@@ -13,8 +13,8 @@
 
 char	*check_args(t_args *arg)
 {
-	if (arg->number_of_coders < 0)
-		return ("error: number of coders must be positive");
+	if (arg->number_of_coders <= 0)
+		return ("error: number of coders must be positive and > 0");
 	if (arg->time_to_burnout < 0)
 		return ("error: time to burnout must be positive");
 	if (arg->time_to_compile < 0)

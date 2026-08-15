@@ -15,11 +15,11 @@ void	f_bunout(t_data *data, int *i, long long now)
 {
 	long long	timestamp;
 
-	pthread_mutex_lock(&data->heap->lock);
 	set_stop(data);
-	pthread_mutex_lock(&data->print_lock);
+	pthread_mutex_lock(&data->heap->lock);
 	pthread_cond_broadcast(&data->cond_check);
 	pthread_mutex_unlock(&data->heap->lock);
+	pthread_mutex_lock(&data->print_lock);
 	timestamp = now - data->coders[*i].data->start_time;
 	printf("%lld %d burned out\n", timestamp, data->coders[*i].id);
 	pthread_mutex_unlock(&data->print_lock);

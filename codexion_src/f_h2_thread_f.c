@@ -28,17 +28,17 @@ void	debug_and_refactor(t_coder *coder)
 {
 	if (get_stop(coder->data))
 		return ;
-	
-	if (smart_sleep(coder->data->args.time_to_debug, coder) == 1)
-		return ;
 	print_state(coder, "is debugging");
 
-	if (get_stop(coder->data))
+	if (smart_sleep(coder->data->args.time_to_debug, coder) == 1)
 		return ;
 	
-	if (smart_sleep(coder->data->args.time_to_refactor, coder) == 1)
+	if (get_stop(coder->data))
 		return ;
 	print_state(coder, "is refactoring");
+	if (smart_sleep(coder->data->args.time_to_refactor, coder) == 1)
+		return ;
+	
 }
 
 int	print_and_check_dongles(t_coder *coder)

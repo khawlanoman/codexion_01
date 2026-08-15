@@ -75,6 +75,7 @@ void	compile_and_unlock_remove_min(t_coder *coder)
 	remove_min(coder->data->heap);
 	pthread_cond_broadcast(&coder->data->cond_check);
 	pthread_mutex_unlock(&coder->data->heap->lock);
+
 	f_dongle_valid(coder);
 }
 

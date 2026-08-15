@@ -102,7 +102,7 @@ int	smart_sleep(long var, t_coder *coder)
 			last_update = time_current();
 		}
 	}
-	return (0);
+	return (1);
 }
 
 void	*controller(void *arg)

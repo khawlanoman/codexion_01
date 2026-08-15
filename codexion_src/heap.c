@@ -28,6 +28,7 @@ t_heap	*alocate_heap(int capacity)
 	heap->size = 0;
 	heap->capacity = capacity;
 	pthread_mutex_init(&heap->lock, NULL);
+	pthread_cond_init(&heap->cond_check, NULL);
 	return (heap);
 }
 

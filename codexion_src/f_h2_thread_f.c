@@ -56,12 +56,12 @@ int	heap_check_wait(t_coder *coder, t_task task)
 {
 	pthread_mutex_lock(&coder->data->heap->lock);
 	add_heap(coder->data->heap, task);
-	pthread_cond_broadcast(&coder->data->cond_check);
+	pthread_cond_broadcast(&coder->data->heap->cond_check);
 	while (!get_stop(coder->data)
 		&& (coder->data->heap->size == 0
 			|| coder->data->heap->arr[0].id != coder->id))
 	{
-		pthread_cond_wait(&coder->data->cond_check, &coder->data->heap->lock);
+		pthread_cond_wait(&coder->data->heap->cond_check, &coder->data->heap->lock);
 	}
 	if (get_stop(coder->data))
 	{

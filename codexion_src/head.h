@@ -51,12 +51,14 @@ typedef struct s_heap
 	int				capacity;
 	t_task			*arr;
 	pthread_mutex_t	lock;
+	pthread_cond_t	cond_check;
 }	t_heap;
 typedef struct dongle
 {
 	int				is_use;
 	long long		is_valid;
 	pthread_mutex_t	mutex;
+	
 }	t_dongle;
 typedef struct s_data
 {
@@ -71,7 +73,6 @@ typedef struct s_data
 	t_coder			*coders;
 	t_dongle		*dongles;
 	pthread_t		controller_thread;
-	pthread_cond_t	cond_check;
 	pthread_mutex_t	group_lock;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	compile_mutex;

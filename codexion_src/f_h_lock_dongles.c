@@ -48,6 +48,15 @@ void	check_first_and_second(t_coder *coder)
 	}
 }
 
+void	helper_compile(t_coder *coder)
+{
+	pthread_mutex_lock(&coder->data->heap->lock);
+	remove_min(coder->data->heap);
+	pthread_cond_broadcast(&coder->data->cond_check);
+	pthread_mutex_unlock(&coder->data->heap->lock);
+	f_dongle_valid(coder);
+}
+
 void	compile_and_unlock_remove_min(t_coder *coder)
 {
 	if (get_stop(coder->data))
@@ -56,27 +65,19 @@ void	compile_and_unlock_remove_min(t_coder *coder)
 		pthread_mutex_unlock(&coder->second->mutex);
 		return ;
 	}
-
 	pthread_mutex_lock(&coder->data->compile_mutex);
 	coder->is_compiling = 1;
 	pthread_mutex_unlock(&coder->data->compile_mutex);
 	print_state(coder, "is compiling");
 	if (smart_sleep(coder->data->args.time_to_compile, coder) == 1)
 		return ;
-	
 	f_last_compile_time(coder);
 	pthread_mutex_lock(&coder->data->compile_mutex);
 	coder->is_compiling = 0;
 	pthread_mutex_unlock(&coder->data->compile_mutex);
 	pthread_mutex_unlock(&coder->first->mutex);
 	pthread_mutex_unlock(&coder->second->mutex);
-	
-	pthread_mutex_lock(&coder->data->heap->lock);
-	remove_min(coder->data->heap);
-	pthread_cond_broadcast(&coder->data->heap->cond_check);
-	pthread_mutex_unlock(&coder->data->heap->lock);
-
-	f_dongle_valid(coder);
+	helper_compile(coder);
 }
 
 int	coder_cycle(t_coder *coder)
@@ -85,8 +86,8 @@ int	coder_cycle(t_coder *coder)
 
 	fifo_groups(coder);
 	task.id = coder->id;
-	f_priority(coder, &task);
-	if (heap_check_wait(coder, task) == 0)
+	f_priority(coder, task);
+	if (heap_check_wait(coder) == 0)
 		return (0);
 	if (print_and_check_dongles(coder) == 0)
 		return (0);

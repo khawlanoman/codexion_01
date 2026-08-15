@@ -103,3 +103,13 @@ int	lock_dongles(t_coder *coder)
 	}
 	return (0);
 }
+
+int	check_compile(t_data *data, int *i)
+{
+	int	k;
+
+	pthread_mutex_lock(&data->compile_mutex);
+	k = data->coders[*i].is_compiling;
+	pthread_mutex_unlock(&data->compile_mutex);
+	return (k);
+}

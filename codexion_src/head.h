@@ -51,14 +51,12 @@ typedef struct s_heap
 	int				capacity;
 	t_task			*arr;
 	pthread_mutex_t	lock;
-	pthread_cond_t	cond_check;
 }	t_heap;
 typedef struct dongle
 {
 	int				is_use;
 	long long		is_valid;
 	pthread_mutex_t	mutex;
-	
 }	t_dongle;
 typedef struct s_data
 {
@@ -73,6 +71,7 @@ typedef struct s_data
 	t_coder			*coders;
 	t_dongle		*dongles;
 	pthread_t		controller_thread;
+	pthread_cond_t	cond_check;
 	pthread_mutex_t	group_lock;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	compile_mutex;
@@ -102,7 +101,7 @@ int				get_stop(t_data *data);
 int				check_coders(t_data *data);
 int				lock_dongles(t_coder *coder);
 int				print_and_check_dongles(t_coder *coder);
-int				heap_check_wait(t_coder *coder, t_task task);
+int				heap_check_wait(t_coder *coder);
 int				check_finish(t_coder *coder);
 int				for_one_dongle(t_coder *coder);
 int				coder_cycle(t_coder *coder);
@@ -112,6 +111,7 @@ int				check_coder_in_monitor(t_data *data);
 int				add_args(t_args *arg, char **argv);
 int				check_valid(char **argv, int argc, t_args *arg);
 int				smart_sleep(long var, t_coder *coder);
+int				check_compile(t_data *data, int *i);
 char			*check_args(t_args *arg);
 char			*valid_args(char **argv, int argc);
 void			create_coders(t_args *arg, t_coder *arr_coder);
@@ -129,7 +129,7 @@ void			print_state(t_coder *coder, char *string);
 void			f_last_compile_time(t_coder *coder);
 void			f_dongle_valid(t_coder *coder);
 void			fifo_groups(t_coder *coder);
-void			f_priority(t_coder *coder, t_task *task);
+void			f_priority(t_coder *coder, t_task task);
 void			fifo_group(t_coder *coder);
 void			debug_and_refactor(t_coder *coder);
 void			compile_and_unlock_remove_min(t_coder *coder);

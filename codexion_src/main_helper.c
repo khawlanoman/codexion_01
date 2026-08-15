@@ -56,6 +56,7 @@ void	data_init(t_data *data, t_args arg)
 		data->group_count_one = (data->args.number_of_coders / 2) + 1;
 	data->group_count_two = data->args.number_of_coders / 2;
 	pthread_mutex_init(&data->group_lock, NULL);
+	pthread_cond_init(&data->cond_check, NULL);
 	pthread_mutex_init(&data->print_lock, NULL);
 	pthread_mutex_init(&data->compile_mutex, NULL);
 	pthread_mutex_init(&data->m_stop, NULL);
@@ -96,7 +97,7 @@ void	f_destroy_and_free(t_data *data, t_args arg)
 	pthread_mutex_destroy(&data->print_lock);
 	pthread_mutex_destroy(&data->m_stop);
 	pthread_mutex_destroy(&data->m_last_compile);
-	pthread_cond_destroy(&data->heap->cond_check);
+	pthread_cond_destroy(&data->cond_check);
 	pthread_mutex_destroy(&data->compile_count);
 	pthread_mutex_destroy(&data->check_finish);
 	free(data->dongles);

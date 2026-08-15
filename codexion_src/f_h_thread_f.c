@@ -75,15 +75,15 @@ void	fifo_groups(t_coder *coder)
 	}
 }
 
-void	f_priority(t_coder *coder, t_task *task)
+void	f_priority(t_coder *coder, t_task task)
 {
 	pthread_mutex_lock(&coder->data->heap->lock);
 	if (coder->data->args.scheduler == t_fifo)
-		task->priority = coder->data->fifo_order++;
+		task.priority = coder->data->fifo_order++;
 	else if (coder->data->args.scheduler == t_edf)
-		task->priority = coder->last_compile_time
+		task.priority = coder->last_compile_time
 			+ coder->data->args.time_to_burnout;
-	// add_heap(coder->data->heap, task);
-	// pthread_cond_broadcast(&coder->data->cond_check);
+	add_heap(coder->data->heap, task);
+	pthread_cond_broadcast(&coder->data->cond_check);
 	pthread_mutex_unlock(&coder->data->heap->lock);
 }

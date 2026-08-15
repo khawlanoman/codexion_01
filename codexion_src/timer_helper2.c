@@ -17,7 +17,7 @@ void	f_bunout(t_data *data, int *i, long long now)
 
 	set_stop(data);
 	pthread_mutex_lock(&data->heap->lock);
-	pthread_cond_broadcast(&data->heap->cond_check);
+	pthread_cond_broadcast(&data->cond_check);
 	pthread_mutex_unlock(&data->heap->lock);
 	pthread_mutex_lock(&data->print_lock);
 	timestamp = now - data->coders[*i].data->start_time;

@@ -85,8 +85,8 @@ int	coder_cycle(t_coder *coder)
 
 	fifo_groups(coder);
 	task.id = coder->id;
-	f_priority(coder, task);
-	if (heap_check_wait(coder) == 0)
+	f_priority(coder, &task);
+	if (heap_check_wait(coder, task) == 0)
 		return (0);
 	if (print_and_check_dongles(coder) == 0)
 		return (0);
